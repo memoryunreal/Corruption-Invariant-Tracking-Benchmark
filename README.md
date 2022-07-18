@@ -8,6 +8,6 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
 
 ![image](https://github.com/memoryunreal/Corruption-Invariant-Tracking-Benchmark/blob/main/randomuav.png)
 
-## Corrupted Data Corruption
+## Corrupted Data Corruption Visualization
 
 ![image](https://github.com/memoryunreal/Corruption-Invariant-Tracking-Benchmark/blob/main/visualization.png)
