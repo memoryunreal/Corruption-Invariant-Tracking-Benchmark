@@ -12,7 +12,7 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
 
 ![image](https://github.com/memoryunreal/Corruption-Invariant-Tracking-Benchmark/blob/main/visualization.png)
 
-# Statics of our benchmark datasets for single and multiple modality object tracking.
+## Statics of our benchmark datasets for single and multiple modality object tracking.
 | Dataset                      | Description         | \#Videos | Added Corruptions                               |
 |------------------------------|---------------------|----------|-------------------------------------------------|
 | VOT2020-ST    | Short-term tracking | 60       | Noise; Blur; Digital                            |
