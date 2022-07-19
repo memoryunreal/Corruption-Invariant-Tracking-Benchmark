@@ -28,7 +28,7 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
         <th> </th><th colspan="3">VOT2020-ST</th> <th colspan="3">VOT2020-ST-C </th> <th colspan="2"> GOT-10k </th> <th colspan="2"> GOT-10k-C</th>
     </tr>
     <tr>
-        <td>Tracker</td> <td>EAO</td> <td>A </td> <td>R</td><td>EAO&darr; <td>A&darr;<td>R&darr;</td><td>SR</td> <td>AO</td> <td>SR&darr;</td> <td>AO&darr;</td>
+        <td>Tracker</td> <td>EAO</td> <td>A </td> <td>R</td><td>EAO(&darr;) <td>A(&darr;)<td>R(&darr;)</td><td>SR</td> <td>AO</td> <td>SR(&darr;)</td> <td>AO(&darr;)</td>
     </tr>
 
 <tr>
@@ -84,7 +84,7 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
         <th> </th><th colspan="3">VOT2020-LT</th> <th colspan="3">VOT2020-LT-C </th> <th colspan="2"> UAV20L </th> <th colspan="2"> UAV20L-C</th>
     </tr>
     <tr>
-        <td>Tracker</td> <td>Pr</td> <td>Re </td> <td>F-score</td><td>Pr(Drop&darr;) <td>Re(Drop&darr;)<td>F-score(Drop&darr;)</td><td>AUC</td> <td>Pre</td> <td>AUC(Drop&darr;)</td> <td>Pre(Drop&darr;)</td>
+        <td>Tracker</td> <td>Pr</td> <td>Re </td> <td>F-score</td><td>Pr(&darr;) <td>Re(&darr;)<td>F-score(&darr;)</td><td>AUC</td> <td>Pre</td> <td>AUC(&darr;)</td> <td>Pre(&darr;)</td>
     </tr>
 
 
