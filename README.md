@@ -88,15 +88,15 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
     </tr>
 
 
-<tr><td>SiamRPN++    </td> <td>63.3 </td> <td> 41.4</td> <td> 50.0 </td> <td> 58.4(7.74) </td> <td> 40.9(1.21) </td> <td> 48.1(3.80) </td> <td>53.6 </td> <td>61.0 </td> <td>49.2(8.21) </td> <td>57.9(5.08)</td> </tr>
-<tr><td>SiamMask     </td> <td> 58.1  </td> <td> 37.6</td> <td> 45.6 </td> <td> 57.0(1.89) </td> <td> 32.7(13.0) </td> <td> 41.6(8.77) </td> <td>54.8 </td> <td>62.7 </td> <td>45.8(16.4) </td> <td>53.3(15.0)  </td> </tr>
-<tr><td>ECO          </td> <td>30.4 </td> <td>32.9 </td> <td>31.6 </td> <td>26.1(14.1) </td> <td>27.5(16.4) </td> <td>26.8(15.2) </td> <td>44.7 </td> <td>53.6 </td> <td>43.3(3.13)</td> <td>52.7(1.68)</td> </tr>
-<tr><td>DiMP-50      </td> <td>52.8 </td> <td>58.2 </td> <td>55.4 </td> <td>43.7(17.2) </td> <td>47.5(18.4) </td> <td>45.5(17.9) </td> <td>56.1</td> <td>64.5 </td> <td>52.1(7.13)</td> <td>61.0(5.43)</td> </tr>
-<tr><td>PrDiMP-50    </td> <td>56.3 </td> <td>61.9 </td> <td>59.0 </td> <td>48.6(13.7) </td> <td>53.4(13.7) </td> <td>50.9(13.7) </td> <td>64.8</td> <td>74.9 </td> <td>57.6(11.1)</td> <td>67.8(9.48)</td> </tr>
-<tr><td>KeepTrack    </td> <td>61.2 </td> <td>67.7 </td> <td>64.3 </td> <td>58.6(4.25) </td> <td>65.2(3.69) </td> <td>61.7(4.04) </td> <td>66.9</td> <td>78.2 </td> <td>65.0(2.84)</td> <td>78.3(-0.13)</td> </tr>
-<tr><td>KYS          </td> <td>35.4 </td> <td>37.7 </td> <td>36.5 </td> <td>32.6(7.91) </td> <td>34.6(8.22) </td> <td>33.6(7.95) </td> <td>53.8</td> <td>61.8 </td> <td>51.2(4.83)</td> <td>59.5(3.72) </td> </tr>
-<tr><td>ToMP-50      </td> <td>58.2 </td> <td>64.0 </td> <td>61.0 </td> <td>57.9(0.52) </td> <td>64.0(0.00) </td> <td>60.8(0.33) </td> <td>62.3</td> <td>71.6 </td> <td>59.0(5.30)</td> <td>69.1(3.49)</td> </tr>
-<tr><td>STARK-50     </td> <td> 71.7</td> <td> 66.8</td> <td>69.2</td> <td> 65.0(9.34)</td> <td> 62.6(6.29)</td> <td>63.8(7.80) </td> <td>70.9</td> <td>82.4 </td> <td>61.2(10.6)</td> <td>71.7(13.0)</td> </tr>
-<tr><td>MixFormer    </td> <td>- </td> <td> - </td> <td> -</td> <td>- </td> <td>-</td> <td> - </td> <td>72.0 </td> <td>83.6 </td> <td>68.4(5.00) </td> <td>80.3(3.95)</td> </tr>
+<tr><td>SiamRPN++       </td> <td>63.3 </td> <td> 41.4</td> <td> 50.0 </td> <td> 58.4(7.74) </td> <td> 40.9(1.21) </td> <td> 48.1(3.80) </td> <td>53.6 </td> <td>61.0 </td> <td>49.2(8.21) </td> <td>57.9(5.08)</td> </tr>
+<tr><td>SiamMask        </td> <td> 58.1  </td> <td> 37.6</td> <td> 45.6 </td> <td> 57.0(1.89) </td> <td> 32.7(13.0) </td> <td> 41.6(8.77) </td> <td>54.8 </td> <td>62.7 </td> <td>45.8(16.4) </td> <td>53.3(15.0)  </td> </tr>
+<tr><td>ECO             </td> <td>30.4 </td> <td>32.9 </td> <td>31.6 </td> <td>26.1(14.1) </td> <td>27.5(16.4) </td> <td>26.8(15.2) </td> <td>44.7 </td> <td>53.6 </td> <td>43.3(3.13)</td> <td>52.7(1.68)</td> </tr>
+<tr><td>DiMP-50         </td> <td>52.8 </td> <td>58.2 </td> <td>55.4 </td> <td>43.7(17.2) </td> <td>47.5(18.4) </td> <td>45.5(17.9) </td> <td>56.1</td> <td>64.5 </td> <td>52.1(7.13)</td> <td>61.0(5.43)</td> </tr>
+<tr><td>PrDiMP-50       </td> <td>56.3 </td> <td>61.9 </td> <td>59.0 </td> <td>48.6(13.7) </td> <td>53.4(13.7) </td> <td>50.9(13.7) </td> <td>64.8</td> <td>74.9 </td> <td>57.6(11.1)</td> <td>67.8(9.48)</td> </tr>
+<tr><td>KeepTrack       </td> <td>61.2 </td> <td>67.7 </td> <td>64.3 </td> <td>58.6(4.25) </td> <td>65.2(3.69) </td> <td>61.7(4.04) </td> <td>66.9</td> <td>78.2 </td> <td>65.0(2.84)</td> <td>78.3(-0.13)</td> </tr>
+<tr><td>KYS             </td> <td>35.4 </td> <td>37.7 </td> <td>36.5 </td> <td>32.6(7.91) </td> <td>34.6(8.22) </td> <td>33.6(7.95) </td> <td>53.8</td> <td>61.8 </td> <td>51.2(4.83)</td> <td>59.5(3.72) </td> </tr>
+<tr><td>ToMP-50         </td> <td>58.2 </td> <td>64.0 </td> <td>61.0 </td> <td>57.9(0.52) </td> <td>64.0(0.00) </td> <td>60.8(0.33) </td> <td>62.3</td> <td>71.6 </td> <td>59.0(5.30)</td> <td>69.1(3.49)</td> </tr>
+<tr><td>STARK-50        </td> <td> 71.7</td> <td> 66.8</td> <td>69.2</td> <td> 65.0(9.34)</td> <td> 62.6(6.29)</td> <td>63.8(7.80) </td> <td>70.9</td> <td>82.4 </td> <td>61.2(10.6)</td> <td>71.7(13.0)</td> </tr>
+<tr><td>MixFormer       </td> <td>- </td> <td> - </td> <td> -</td> <td>- </td> <td>-</td> <td> - </td> <td>72.0 </td> <td>83.6 </td> <td>68.4(5.00) </td> <td>80.3(3.95)</td> </tr>
 
 </table>
