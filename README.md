@@ -74,7 +74,7 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
 <td>MixFormer  </td>        <td> 53.5 </td><td>76.2  </td><td>82.6 </td><td>42.6(20.4)   </td><td>65.5(14.0)  </td><td>76.1(7.87) </td><td>93.3 </td><td>82.7  </td><td>87.0(6.75)  </td><td>76.3(7.74)</td>
 </tr>
 <tr>
-<td>MixFormer-Large  </td>  <td>56.6  </td><td>76.8  </td><td>84.4 </td><td>44.7(21.0)   </td><td>67.0(12.8)  </td><td>77.7(7.94) <td> </td> <td> </td> <td> </td> <td> </td>
+<td>MixFormer-Large  </td>  <td>56.6  </td><td>76.8  </td><td>84.4 </td><td>44.7(21.0)   </td><td>67.0(12.8)  </td><td>77.7(7.94) <td> 93.3</td> <td>83.4 </td> <td> 88.1(5.57)</td> <td>78.2 (6.23)</td> 
 </tr>
 
 </table>
