@@ -3,7 +3,7 @@
 This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and DepthTrack-C datasets.
 
 ## Corruptions in Tracking
-
+![image](https://github.com/memoryunreal/Corruption-Invariant-Tracking-Benchmark/edit/main/overview.png)
 ## Benchmark Datasets Construction
 | Dataset       | Description         | \#Videos | Added Corruptions                               |
 |---------------|---------------------|----------|-------------------------------------------------|
