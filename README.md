@@ -101,3 +101,25 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
 <tr><td>MixFormer       </td> <td>- </td> <td> - </td> <td> -</td> <td>- </td> <td>-</td> <td> - </td> <td>72.0 </td> <td>83.6 </td> <td>68.4(5.00) </td> <td>80.3(3.95)</td> </tr>
 
 </table>
+
+
+# Installation
+For all the tracking methods are using 'for' loop instead of dataloader to load dataset in inference stage, to accelerate the tracking speed, we create the corruption dataset in advance.
+
+- Environment install
+```
+cd Corruption-Invariant-Tracking-Benchmark/dist/
+python setup.py install
+```
+
+- Generate corruption datset
+```
+# generate image corruption dataset
+python random_corruption_datset.py 
+
+# generate video corruption dataset
+python video_corruption.py 
+
+# random corruption fo UAV20L
+python random_20l.py
+```
