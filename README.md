@@ -1,8 +1,29 @@
 # Corruption-Invariant-Tracking-Benchmark (CITB)
 
-This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and DepthTrack-C datasets.
+CITB is a rigorous benchmark established for tracking corruption robustness by re-constructing both single- and multi-modal tracking datasets with task-specific corruptions, resulting in VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and DepthTrack-C datasets.
 
-## Corruptions in Tracking
+# Installation
+For all the tracking methods are using 'for' loop instead of dataloader to load dataset in inference stage, to accelerate the tracking speed, we create the corruption dataset in advance.
+
+- Environment install
+```
+cd Corruption-Invariant-Tracking-Benchmark/dist/
+python setup.py install
+```
+
+- Generate corruption datset
+```
+# generate image corruption dataset
+python random_corruption_datset.py 
+
+# generate video corruption dataset
+python video_corruption.py 
+
+# random corruption fo UAV20L
+python random_20l.py
+```
+
+## Corruption Settings
 ![image](https://github.com/memoryunreal/Corruption-Invariant-Tracking-Benchmark/blob/main/overview.png)
 ## Benchmark Datasets Construction
 | Dataset       | Description         | \#Videos | Added Corruptions                               |
@@ -14,13 +35,12 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
 | DepthTrack    | RGB-Depth Tracking  | 50       | Noise; Blur; Digital; Transmission; Multi-modal |
 
 ## Random Corruption Robustness
-
+Since corruptions in the real world are numerous and unpredictable, it is more practical and challenging to simulate the corruptions in a random way. We use the UAV20L to simulate a tracker equipped on a UAV in the real world. Thus, long-time tracking, outdoor acquisition, and high efficiency are required, resulting in complex and unpredictable corruptions. 
 ![image](https://github.com/memoryunreal/Corruption-Invariant-Tracking-Benchmark/blob/main/randomuav.png)
 
 ## Corrupted Data Corruption Visualization
 
 ![image](https://github.com/memoryunreal/Corruption-Invariant-Tracking-Benchmark/blob/main/visualization.png)
-
 
 
 ## Tracker performance on clean data and corrupted data. Results are shown in percentage. 
@@ -102,24 +122,3 @@ This benchmark contains VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and Dept
 
 </table>
 
-
-# Installation
-For all the tracking methods are using 'for' loop instead of dataloader to load dataset in inference stage, to accelerate the tracking speed, we create the corruption dataset in advance.
-
-- Environment install
-```
-cd Corruption-Invariant-Tracking-Benchmark/dist/
-python setup.py install
-```
-
-- Generate corruption datset
-```
-# generate image corruption dataset
-python random_corruption_datset.py 
-
-# generate video corruption dataset
-python video_corruption.py 
-
-# random corruption fo UAV20L
-python random_20l.py
-```
