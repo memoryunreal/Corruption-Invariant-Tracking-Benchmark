@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: pysot",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/MM2022/pysot/tools/test.py",
+            "console": "integratedTerminal",
+            "args": ["--snapshot", "/home/MM2022/pysot/experiments/siamrpn_r50_l234_dwxcorr/model.pth", "--dataset", "GOT-10k_allcorp", "--corp_dataset", "gaussian_blur","--config", "/home/MM2022/pysot/experiments/siamrpn_r50_l234_dwxcorr/config.yaml", "--tracking_result_path", "/home/dataset/NIPS2022_workspace/GOT10K/val_results/siamrpn_r50"],
+            "justMyCode": true
+        },
+        {
+            "name": "Python: pysot_vot",
+            "type": "python",
+            "request": "launch",
+            "program": "/opt/conda/envs/pysot/bin/vot",
+            "console": "integratedTerminal",
+            "args": ["evaluate", "--workspace", "/home/dataset/vot2020/", "siammask_r50"],
+            "justMyCode": false
+        },
+    ]
+}
+bit_error defocus_blur frost glass_blur impulse_noise pixelate shot_noise speckle_noise brightness elastic_transform gaussian_blur h265_abr jpeg_compression rain snow zoom_blur contrast fog gaussian_noise h265_crf    motion_blur       saturate  spatter
+
+
+DiMP50 DiMP50-C  PrDiMP50  PrDiMP50-C ToMP50 ToMP50-C  eco  eco-C keeptrack  keeptrack-C  kys kys-C mixformer  mixformer-C siammask_r50 siammask_r50-C siamrpn_r50 siamrpn_r50-C  stark_st50  stark_st50-C stark_st101_ar stark_st101-C

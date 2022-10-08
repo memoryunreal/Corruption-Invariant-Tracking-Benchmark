@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=3 python /home/MM2022/pysot/tools/test.py --snapshot /home/MM2022/pysot/experiments/siamrpn_r50_l234_dwxcorr/model.pth --dataset UAV20L-C-random --config /home/MM2022/pysot/experiments/siamrpn_r50_l234_dwxcorr/config.yaml --tracking_result_path /home/dataset/NIPS2022_workspace/UAV20L-C/random_long_video/siamrpn_r50

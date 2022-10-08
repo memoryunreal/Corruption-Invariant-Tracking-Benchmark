@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=2 python /home/MM2022/pysot/tools/test.py --snapshot /home/MM2022/pysot/experiments/siammask_r50_l3/model.pth --dataset UAV20L-C-random --config /home/MM2022/pysot/experiments/siammask_r50_l3/config.yaml --tracking_result_path /home/dataset/NIPS2022_workspace/UAV20L-C/random_long_video/siammask_r50
