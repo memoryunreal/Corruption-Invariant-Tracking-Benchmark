@@ -1,6 +1,6 @@
 # Corruption-Invariant-Tracking-Benchmark (CITB)
 
-CITB is a rigorous benchmark established for tracking corruption robustness by re-constructing both single- and multi-modal tracking datasets with task-specific corruptions, resulting in VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and DepthTrack-C datasets.
+cvpr CITB is a rigorous benchmark established for tracking corruption robustness by re-constructing both single- and multi-modal tracking datasets with task-specific corruptions, resulting in VOT2020ST-C, GOT-10k-C, VOT2020-LT-C, UAV20L-C, and DepthTrack-C datasets.
 
 # Installation
 For all the tracking methods are using 'for' loop instead of dataloader to load dataset in inference stage, to accelerate the tracking speed, we create the corruption dataset in advance.
