@@ -35,6 +35,14 @@ python video_corruption.py
 python random_20l.py
 ```
 
+- vot2020 and votlt2020
+```
+bash launchfile/vot.sh
+```
+
+- GOT10K
+
+
 ## Corruption Settings
 ## Benchmark Datasets Construction
 | Dataset       | Description         | \#Videos | Added Corruptions                               |

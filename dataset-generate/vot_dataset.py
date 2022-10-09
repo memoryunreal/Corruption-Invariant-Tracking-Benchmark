@@ -20,7 +20,13 @@ seqlist = os.listdir(origindata_dir)
 seqlist.remove('list.txt')
 # seqlist.remove('list.txt.bk') # vot2020
 seqlist.sort()
-
+seqlist = ["group1",
+"parachute",
+"rollerman",
+"skiing",
+"volkswagen",
+"yamaha",
+]
 originseq_color = [os.path.join(origindata_dir,seq,"color") for seq in seqlist] 
 # origindata_depth = [os.path.join(origindata_dir,seq, 'depth') for seq in seqlist] 
 
