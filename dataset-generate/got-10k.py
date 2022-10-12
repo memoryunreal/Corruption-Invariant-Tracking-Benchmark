@@ -41,35 +41,36 @@ def generate_corpfiles(i):
     corp_trans = CIT() # initialize the corruption type and level for one sequence
     print(corp_trans.corrupt_func.__name__, corp_trans.level)
 
-    colorfiles = os.listdir(originseq_color[i])
-    colorlist = [] # create an empty list
-    
-    for imgfile in colorfiles: # remove other suffix file in the color directory 
-        if os.path.splitext(imgfile)[1] == '.jpg': 
-            colorlist.append(imgfile)
-
-    
-    colorlist.sort() # sort the image files
-
-
-    if not os.path.exists(newseq_color[i]):  # mkdir for new directory
-        os.makedirs(newseq_color[i])
-
-
-
-    if firstframe_clean: # for specified corruption type firstframe_clean or firstframe corrupted
-        shutil.copy2(os.path.join(originseq_color[i],colorlist[0]), os.path.join(newseq_color[i], colorlist[0]))
-        colorlist = colorlist[1:]
-    elif firstframe_corrupt:
-        colorlist = [colorlist[0]]
-
-    for img_idx in range(len(colorlist)):
+    if corp_trans.corrupt_func in corp_trans.image_function:
+        colorfiles = os.listdir(originseq_color[i])
+        colorlist = [] # create an empty list
         
-        ori_colorfile = colorlist[img_idx]
- 
-        imagefile = os.path.join(originseq_color[i],ori_colorfile)
-        corrupted_color = corp_trans.corrupt_trans(imagefile)
-        corrupted_color.save(os.path.join(newseq_color[i], ori_colorfile))
+        for imgfile in colorfiles: # remove other suffix file in the color directory 
+            if os.path.splitext(imgfile)[1] == '.jpg': 
+                colorlist.append(imgfile)
+
+        
+        colorlist.sort() # sort the image files
+
+
+        if not os.path.exists(newseq_color[i]):  # mkdir for new directory
+            os.makedirs(newseq_color[i])
+
+
+
+        if firstframe_clean: # for specified corruption type firstframe_clean or firstframe corrupted
+            shutil.copy2(os.path.join(originseq_color[i],colorlist[0]), os.path.join(newseq_color[i], colorlist[0]))
+            colorlist = colorlist[1:]
+        elif firstframe_corrupt:
+            colorlist = [colorlist[0]]
+
+        for img_idx in range(len(colorlist)):
+            
+            ori_colorfile = colorlist[img_idx]
+    
+            imagefile = os.path.join(originseq_color[i],ori_colorfile)
+            corrupted_color = corp_trans.corrupt_trans(imagefile)
+            corrupted_color.save(os.path.join(newseq_color[i], ori_colorfile))
 
 firstframe_clean = False
 firstframe_corrupt = False
