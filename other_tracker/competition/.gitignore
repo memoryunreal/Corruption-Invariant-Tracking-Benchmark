@@ -1,0 +1,11 @@
+# mixformer
+MixFormer/pretrained_cvt/CvT-21-384x384-IN-22k.pth
+MixFormer/tensorboard
+
+# ostrack
+OSTrack/pretrained_models/mae_pretrain_vit_base.pth
+OSTrack/tensorboard
+OSTrack/output
+OSTrack/data
+__pycache__
+.vscode
