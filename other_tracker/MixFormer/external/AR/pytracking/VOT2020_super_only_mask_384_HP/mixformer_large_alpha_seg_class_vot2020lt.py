@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 
 import cv2
 import torch
-import vot
+import vot2022 as vot
 import sys
 import time
 import os
@@ -32,10 +32,11 @@ class MIXFORMER_ALPHA_SEG(object):
         self.alpha = ARcm_seg(refine_path, input_sz=384)
 
     def initialize(self, image, mask):
-        region = rect_from_mask(mask)
+        # mask
+        # region = rect_from_mask(mask)
         # init_info = {'init_bbox': region}
         # self.tracker.initialize(image, init_info)
-
+        region = mask
         self.H, self.W, _ = image.shape
         gt_bbox_np = np.array(region).astype(np.float32)
         '''Initialize STARK for specific video'''
@@ -78,11 +79,11 @@ def make_full_size(x, output_sz):
 
 
 refine_model_name = 'ARcm_coco_seg_only_mask_384'
-params = vot_params.parameters("baseline", model="mixformer_online_22k.pth.tar")
-# params = vot_params.parameters("baseline")
+params = vot_params.parameters("baseline_large", model="mixformerL_online_22k.pth.tar")
 mixformer = MixFormerOnline(params, "VOT20")
 tracker = MIXFORMER_ALPHA_SEG(tracker=mixformer, refine_model_name=refine_model_name)
-handle = vot.VOT("mask")
+# handle = vot.VOT("mask")
+handle = vot.VOT("rectangle")
 selection = handle.region()
 imagefile = handle.frame()
 
@@ -91,17 +92,25 @@ if not imagefile:
 
 image = cv2.cvtColor(cv2.imread(imagefile), cv2.COLOR_BGR2RGB)  # Right
 # mask given by the toolkit ends with the target (zero-padding to the right and down is needed)
-mask = make_full_size(selection, (image.shape[1], image.shape[0]))
+# mask = make_full_size(selection, (image.shape[1], image.shape[0]))
 
 tracker.H = image.shape[0]
 tracker.W = image.shape[1]
 
-tracker.initialize(image, mask)
+# tracker.initialize(image, mask)
+tracker.initialize(image, selection)
 
 while True:
+    # imagefile = handle.frame()
     imagefile = handle.frame()
     if not imagefile:
         break
     image = cv2.cvtColor(cv2.imread(imagefile), cv2.COLOR_BGR2RGB)  # Right
     region, confidence = tracker.track(image)
+    try:
+        tmp = rect_from_mask(region)
+        tmp1 = tmp
+    except:
+        tmp = tmp1
+    region = vot.Rectangle(tmp[0],tmp[1],tmp[2],tmp[3])
     handle.report(region, confidence)

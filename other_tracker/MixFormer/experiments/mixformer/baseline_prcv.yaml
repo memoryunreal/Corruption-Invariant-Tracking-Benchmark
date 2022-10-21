@@ -34,7 +34,7 @@ DATA:
 MODEL:
   BACKBONE:
     PRETRAINED: True
-    PRETRAINED_PATH: '/home/PRCV_com_2022/competition/MixFormer/pretrained_cvt/CvT-21-384x384-IN-22k.pth' #'/home/cyt/project/CvtT/models/CvT-21-384x384-IN-22k.pth'
+    PRETRAINED_PATH: '/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/MixFormer/pretrained_cvt/CvT-21-384x384-IN-22k.pth' #'/home/cyt/project/CvtT/models/CvT-21-384x384-IN-22k.pth'
     INIT: 'trunc_norm'
     NUM_STAGES: 3
     PATCH_SIZE: [ 7, 3, 3 ]

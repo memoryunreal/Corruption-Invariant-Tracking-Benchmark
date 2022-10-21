@@ -6,8 +6,8 @@
 ### Training MixFormer-22k
 # Stage1: train mixformer without SPM
 # python tracking/train.py --script mixformer --config baseline --save_dir /YOUR/PATH/TO/SAVE/MIXFORMER --mode multiple --nproc_per_node 8
-python tracking/train.py --script mixformer --config baseline --save_dir /home/PRCV_com_2022/competition/checkpoints/stage1 --mode multiple --nproc_per_node 8   
-# run straight: python -m torch.distributed.launch --master_port 26500 --nproc_per_node 8 lib/train/run_training.py --script mixformer --config baseline_prcv --save_dir /home/PRCV_com_2022/competition/checkpoints/stage1 --use_lmdb 0 --script_prv None --config_prv baseline  --distill 0 --script_teacher None --config_teacher None --stage1_model None
+python tracking/train.py --script mixformer --config baseline --save_dir /home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/checkpoints/stage1 --mode multiple --nproc_per_node 8   
+# run straight: python -m torch.distributed.launch --master_port 26500 --nproc_per_node 8 lib/train/run_training.py --script mixformer --config baseline_prcv --save_dir /home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/checkpoints/stage1 --use_lmdb 0 --script_prv None --config_prv baseline  --distill 0 --script_teacher None --config_teacher None --stage1_model None
 
 
 ## Stage2: train mixformer_online, i.e., SPM (score prediction module)

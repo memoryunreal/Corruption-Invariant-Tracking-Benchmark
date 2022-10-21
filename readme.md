@@ -53,3 +53,10 @@ bash launchfile/vot.sh
 | UAV20L        | UAV tracking        | 20       | Noise; Blur; Digital; Weather; Transmission     |
 | DepthTrack    | RGB-Depth Tracking  | 50       | Noise; Blur; Digital; Transmission; Multi-modal |
 
+## pytracking trackers
+```
+# run the pytracking trackers dimp tomp keep_track eco kys lwl atom(failed)
+/launchfile/pytracking/*.sh
+
+$
+```

@@ -23,7 +23,8 @@ class MixFormerOnline(BaseTracker):
         self.preprocessor = Preprocessor_wo_mask()
         self.state = None
         # for debug
-        self.debug = params.debug
+        # self.debug = params.debug
+        self.debug = False
         self.frame_id = 0
         if self.debug:
             self.save_dir = "debug"
