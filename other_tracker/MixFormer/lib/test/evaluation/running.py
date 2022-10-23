@@ -14,14 +14,15 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict):
     if not os.path.exists(tracker.results_dir):
         print("create tracking result dir:", tracker.results_dir)
         os.makedirs(tracker.results_dir)
-    if seq.dataset in ['trackingnet', 'got10k']:
-        if not os.path.exists(os.path.join(tracker.results_dir, seq.dataset)):
-            os.makedirs(os.path.join(tracker.results_dir, seq.dataset))
+    # if seq.dataset in ['trackingnet', 'got10k']:
+    #     if not os.path.exists(os.path.join(tracker.results_dir, seq.dataset)):
+    #         os.makedirs(os.path.join(tracker.results_dir, seq.dataset))
     '''2021.1.5 create new folder for these two datasets'''
-    if seq.dataset in ['trackingnet', 'got10k']:
-        base_results_path = os.path.join(tracker.results_dir, seq.dataset, seq.name)
-    else:
-        base_results_path = os.path.join(tracker.results_dir, seq.name)
+    # if seq.dataset in ['trackingnet', 'got10k']:
+    #     base_results_path = os.path.join(tracker.results_dir, seq.dataset, seq.name)
+    # else:
+    #     base_results_path = os.path.join(tracker.results_dir, seq.name)
+    base_results_path = os.path.join(tracker.results_dir, seq.name)
 
     def save_bb(file, data):
         tracked_bb = np.array(data).astype(int)
@@ -59,7 +60,7 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict):
                     save_bb(bbox_file, d)
             else:
                 # Single-object mode
-                bbox_file = '{}.txt'.format(base_results_path)
+                bbox_file = '{}_001.txt'.format(base_results_path)
                 save_bb(bbox_file, data)
 
         if key == 'all_boxes':

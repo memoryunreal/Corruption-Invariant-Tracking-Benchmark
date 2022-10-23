@@ -12,9 +12,11 @@ class UAVDataset(BaseDataset):
         https://ivul.kaust.edu.sa/Documents/Publications/2016/A%20Benchmark%20and%20Simulator%20for%20UAV%20Tracking.pdf
     Download the dataset from https://ivul.kaust.edu.sa/Pages/pub-benchmark-simulator-uav.aspx
     """
-    def __init__(self):
+    def __init__(self, datasetpath=None):
         super().__init__()
         self.base_path = self.env_settings.uav_path
+        if datasetpath:
+            self.base_path= datasetpath
         self.sequence_info_list = self._get_sequence_info_list()
 
     def get_sequence_list(self):

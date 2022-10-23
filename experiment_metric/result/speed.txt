@@ -1,0 +1,36 @@
+DeT  0.560 & 36.88} \\
+DAL 0.526 & 25.98} \\
+TSDM 0.472 & 23 \\
+CA3DMS  &0.244 &47.7 \\
+DSKCF 0.039 &4.16 \\
+DSKCF\_shape 0.040 &9.47 \\
+CSRDCF-D  0.163 & 0.43 \\
+STARK\_rgbd  0.657  5.41 \\
+DRefine  0.590 &4.92 \\
+SLMD 0.586 & 2.39 \\
+TALGD 0.622 & 1.28 \\
+sttc\_rgbd  0.591 & 16.19 \\
+CLGS-D  0.567 & 7.27 \\
+DDiMP 0.592 &4.77 \\
+Siam\_LTD  0.466 & 13 \\
+ATCAIS 0.584 & 1.32 \\
+LTDSEd 0.466 & 5.65\\
+SiamDW-D 0.457 &3.77\\
+
+
+ATCAIS20    : 1.087277003249107
+DDiMP       : 3.1787498714079985
+iiau_rgbd   : 5.074597079707859
+SiamM_Ds    : 14.328292715500835
+sttc_rgbd   : 18.83953972805051
+TSDM        : 15.577865045723179
+DAL         : 28.845176679273457
+DRefine     : 4.098044802027083
+SiamDW_D    : 2.25484597887608
+SLMD        : 2.2642716956103786
+TALGD       : 1.3644797957048118
+
+Trackers: CADMS  Seq_num: 0 frame_num: 101876  fps: 10.000000000000004
+Trackers: CSR-depth  Seq_num: 0 frame_num: 101876  fps: 10.000000000000004
+Trackers: OTR  Seq_num: 0 frame_num: 101876  fps: 10.000000000000004
+Trackers: LTDSEd  Seq_num: 0 frame_num: 101876  fps: 46.9373386528984

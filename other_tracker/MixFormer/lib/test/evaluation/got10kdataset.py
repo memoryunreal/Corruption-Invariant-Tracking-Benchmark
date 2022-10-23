@@ -1,4 +1,5 @@
 import numpy as np
+import random
 from lib.test.evaluation.data import Sequence, BaseDataset, SequenceList
 from lib.test.utils.load_text import load_text
 import os
@@ -15,13 +16,17 @@ class GOT10KDataset(BaseDataset):
 
     Download dataset from http://got-10k.aitestunion.com/downloads
     """
-    def __init__(self, split):
+    def __init__(self, split, datasetpath=None):
         super().__init__()
         # Split can be test, val, or ltrval (a validation split consisting of videos from the official train set)
         if split == 'test' or split == 'val':
             self.base_path = os.path.join(self.env_settings.got10k_path, split)
         else:
             self.base_path = os.path.join(self.env_settings.got10k_path, 'train')
+        
+        # rewrite datasetpath
+        if datasetpath:
+            self.base_path = datasetpath
 
         self.sequence_list = self._get_sequence_list(split)
         self.split = split
@@ -53,4 +58,5 @@ class GOT10KDataset(BaseDataset):
                 seq_ids = f.read().splitlines()
 
             sequence_list = [sequence_list[int(x)] for x in seq_ids]
+        random.shuffle(sequence_list)
         return sequence_list

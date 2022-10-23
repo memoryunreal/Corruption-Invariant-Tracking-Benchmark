@@ -1,0 +1,15 @@
+INFO:2022-26-05 17:01:24:Trackers: ATCAIS20  Seq_num: 0 frame_num: 101876  fps: 1.087277003249107
+INFO:2022-26-05 17:01:27:Trackers: CADMS  Seq_num: 0 frame_num: 101876  fps: 10.000000000000004
+INFO:2022-26-05 17:01:28:Trackers: CSR-depth  Seq_num: 0 frame_num: 101876  fps: 10.000000000000004
+INFO:2022-26-05 17:01:30:Trackers: DDiMP  Seq_num: 0 frame_num: 101876  fps: 3.1787498714079985
+INFO:2022-26-05 17:01:32:Trackers: iiau_rgbd  Seq_num: 0 frame_num: 101876  fps: 5.074597079707859
+INFO:2022-26-05 17:01:34:Trackers: OTR  Seq_num: 0 frame_num: 101876  fps: 10.000000000000004
+INFO:2022-26-05 17:01:35:Trackers: SiamM_Ds  Seq_num: 0 frame_num: 101876  fps: 14.328292715500835
+INFO:2022-26-05 17:01:37:Trackers: sttc_rgbd  Seq_num: 0 frame_num: 101876  fps: 18.83953972805051
+INFO:2022-26-05 17:01:37:Trackers: TSDM  Seq_num: 0 frame_num: 843  fps: 15.577865045723179
+INFO:2022-26-05 17:01:37:Trackers: DAL  Seq_num: 0 frame_num: 843  fps: 28.845176679273457
+INFO:2022-26-05 17:01:37:Trackers: DRefine  Seq_num: 0 frame_num: 843  fps: 4.098044802027083
+INFO:2022-26-05 17:01:38:Trackers: LTDSEd  Seq_num: 0 frame_num: 101876  fps: 46.9373386528984
+INFO:2022-26-05 17:01:38:Trackers: SiamDW_D  Seq_num: 0 frame_num: 101876  fps: 2.25484597887608
+INFO:2022-26-05 17:01:39:Trackers: SLMD  Seq_num: 0 frame_num: 101876  fps: 2.2642716956103786
+INFO:2022-26-05 17:01:40:Trackers: TALGD  Seq_num: 0 frame_num: 101876  fps: 1.3644797957048118
