@@ -1,5 +1,5 @@
 import os
-
+import argparse
 from matplotlib.pyplot import box
 import numpy as np
 from Tracker import Tracking
@@ -232,74 +232,92 @@ def analysis_tracker(idx):
    
     su = tracker._prsu.success_50()
     ao = tracker._prsu.AO()
-    print('Trackers: {} success50: {} AO: {}'. format(tracker.name, su, ao)) 
+    # print('Trackers: {:<30} success50: {} \t AO: {}'. format(tracker.name, su, ao)) 
+    print('Trackers: {:<30} success50: {:0.2f} \t AO: {:0.2f}'. format(tracker.name, su*100, ao*100)) 
 ##success or pr-r
-seqlist = []
 # with open('/ssd3/lz/dataset/UAV123/UAV20L.txt', 'r') as f:
 
-dataset = "vot"
-if dataset == "got10k":
-    with open('/ssd3/lz/dataset/GOT-10K/val/list.txt', 'r') as f:
-        seq_value = f.readlines()
-        for val in seq_value:
-            seqlist.append(val.split("\n")[0])
-    seqlist = seqlist[:71] #got10k
-    all_sequence = [got10k_sequence(seq, dataset='/ssd3/lz/dataset/GOT-10K/',data_type="val") for seq in seqlist] #got10k
-    resdir = '/ssd3/lz/NIPS2022/111.5/NIPS2022_workspace/GOT10K-C/firstframe-clean'
-    tracker_list = os.listdir(resdir) # 
-    tracker_list.sort()
-    all_trackers = [got10k_tracker(name=tracker, path=resdir) for tracker in tracker_list]
-elif dataset == "vot":
-    with open('/ssd3/lz/dataset/vot2020-C/sequences/list.txt', 'r') as f:
-        seq_value = f.readlines()
-        for val in seq_value:
-            seqlist.append(val.split("\n")[0])
-    # seqlist = ["fernandsso"]
-    all_sequence = [got10k_sequence(seq, dataset='/ssd3/lz/dataset/vot2020/sequences/', data_type="vot") for seq in seqlist] #got10k
-    tracker_list = os.listdir('/ssd3/lz/NIPS2022/111.5/vot2020-C/results/') # votlt2020
-    tracker_list.sort()
-    tracker_list = ["stark_st50", "stark_st50-C"]
-    all_trackers = [got10k_tracker(name=tracker, path="/ssd3/lz/NIPS2022/111.5/vot2020-C/results/", type="vot") for tracker in tracker_list]
-elif dataset == "votlt":
-    with open('/ssd3/lz/dataset/votlt2020-C/sequences/list.txt', 'r') as f:
-        seq_value = f.readlines()
-        for val in seq_value:
-            seqlist.append(val.split("\n")[0])
-    seqlist.sort() 
-    # seqlist = seqlist[:31] # vot2020
-    all_sequence = [got10k_sequence(seq, dataset='/ssd3/lz/dataset/votlt2020/sequences/', data_type="votlt") for seq in seqlist] #got10k
-    # tracker_list = os.listdir('/ssd3/lz/NIPS2022/111.5/votlt2020-C/results/') # votlt2020
-    tracker_list=['mixformer']
-    tracker_list.sort()
-    all_trackers = [got10k_tracker(name=tracker, path="/ssd3/lz/NIPS2022/111.5/votlt2020-C/results/", type="votlt") for tracker in tracker_list]
-all_corp_type = False
-alltype = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
-    "glass_blur", "motion_blur", "zoom_blur", "contrast",
-    "elastic_transform", "pixelate", "jpeg_compression", "speckle_noise",
-    "gaussian_blur", "spatter", "saturate", "bit_error", "h265_crf", "h265_abr", "fog", "rain", "frost", "snow","brightness" ]
-if all_corp_type:
-    for cortype in alltype: 
-        print(cortype)
 
-        tracker_list = os.listdir(os.path.join('/ssd3/lz/NIPS2022/workspace/GOT10K/all_corruption', cortype))
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Evaluate the got-10k results, output SR(50)/AO")
+    parser.add_argument('--dataset', type=str, help="dataset_type vot got10k votlt")
+    parser.add_argument('--resultpath', type=str, help="tracker results dir")
+    parser.add_argument('--allcorp', type=bool, default=False, help="tracker results dir")
+    args = parser.parse_args()
+
+    seqlist = []
+    dataset = args.dataset
+    result_dir = args.resultpath 
+    got10k_dataset='/home/dataset4/cvpr2023/GOT-10K/'
+
+    all_corp_type = args.allcorp
+    alltype = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
+        "glass_blur", "motion_blur", "zoom_blur", "contrast",
+        "elastic_transform", "pixelate", "jpeg_compression", "speckle_noise",
+        "gaussian_blur", "spatter", "saturate", "bit_error", "h265_crf", "h265_abr", "fog", "rain", "frost", "snow","brightness" ]
+
+    if dataset == "got10k":
+        # get got10k sequence 
+        with open(os.path.join(got10k_dataset,'val/list.txt'), 'r') as f:
+            seq_value = f.readlines()
+            for val in seq_value:
+                seqlist.append(val.split("\n")[0])
+        all_sequence = [got10k_sequence(seq, dataset=got10k_dataset,data_type="val") for seq in seqlist] #got10k
+        # resdir = '/ssd3/lz/NIPS2022/111.5/NIPS2022_workspace/GOT10K-C/firstframe-clean'
+        
+        tracker_list = os.listdir(result_dir) # 
         tracker_list.sort()
-        tracker_result_path = os.path.join('/ssd3/lz/NIPS2022/workspace/GOT10K/all_corruption', cortype)
-        all_trackers = [got10k_tracker(tracker,path=tracker_result_path) for tracker in tracker_list]
+        all_trackers = [got10k_tracker(name=tracker, path=result_dir) for tracker in tracker_list]
 
-        pool = Pool(processes=1)    # set the processes max number 3
+    elif dataset == "vot":
+        with open('/ssd3/lz/dataset/vot2020-C/sequences/list.txt', 'r') as f:
+            seq_value = f.readlines()
+            for val in seq_value:
+                seqlist.append(val.split("\n")[0])
+        # seqlist = ["fernandsso"]
+        all_sequence = [got10k_sequence(seq, dataset='/ssd3/lz/dataset/vot2020/sequences/', data_type="vot") for seq in seqlist] #got10k
+        tracker_list = os.listdir('/ssd3/lz/NIPS2022/111.5/vot2020-C/results/') # votlt2020
+        tracker_list.sort()
+        tracker_list = ["stark_st50", "stark_st50-C"]
+        all_trackers = [got10k_tracker(name=tracker, path="/ssd3/lz/NIPS2022/111.5/vot2020-C/results/", type="vot") for tracker in tracker_list]
+
+    elif dataset == "votlt":
+        with open('/ssd3/lz/dataset/votlt2020-C/sequences/list.txt', 'r') as f:
+            seq_value = f.readlines()
+            for val in seq_value:
+                seqlist.append(val.split("\n")[0])
+        seqlist.sort() 
+        # seqlist = seqlist[:31] # vot2020
+        all_sequence = [got10k_sequence(seq, dataset='/ssd3/lz/dataset/votlt2020/sequences/', data_type="votlt") for seq in seqlist] #got10k
+        # tracker_list = os.listdir('/ssd3/lz/NIPS2022/111.5/votlt2020-C/results/') # votlt2020
+        tracker_list=['mixformer']
+        tracker_list.sort()
+        all_trackers = [got10k_tracker(name=tracker, path="/ssd3/lz/NIPS2022/111.5/votlt2020-C/results/", type="votlt") for tracker in tracker_list]
+
+
+    if all_corp_type:
+        for cortype in alltype: 
+            print(cortype)
+
+            tracker_list = os.listdir(os.path.join('/ssd3/lz/NIPS2022/workspace/GOT10K/all_corruption', cortype))
+            tracker_list.sort()
+            tracker_result_path = os.path.join('/ssd3/lz/NIPS2022/workspace/GOT10K/all_corruption', cortype)
+            all_trackers = [got10k_tracker(tracker,path=tracker_result_path) for tracker in tracker_list]
+
+            pool = Pool(processes=1)    # set the processes max number 3
+            for i in range(len(all_trackers)):
+                result = pool.apply_async(analysis_tracker, (i,))
+            pool.close()
+            pool.join()
+
+    else:
+        # tracker_list = os.listdir('/ssd3/lz/NIPS2022/workspace/GOT10K/val_results')
+
+        pool = Pool(processes=10)    # set the processes max number 3
         for i in range(len(all_trackers)):
             result = pool.apply_async(analysis_tracker, (i,))
         pool.close()
         pool.join()
-
-else:
-    # tracker_list = os.listdir('/ssd3/lz/NIPS2022/workspace/GOT10K/val_results')
-
-    pool = Pool(processes=1)    # set the processes max number 3
-    for i in range(len(all_trackers)):
-        result = pool.apply_async(analysis_tracker, (i,))
-    pool.close()
-    pool.join()
 
 
 
