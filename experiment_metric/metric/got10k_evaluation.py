@@ -58,7 +58,7 @@ class got10k_tracker(Tracking):
         
         self.type = type
         votdir = {
-            "vot": "unsupervised",
+            "vot2020": "unsupervised",
             "votlt": "longterm",
             "votrgbd": "rgbd-unsupervised"
         }
@@ -162,7 +162,7 @@ class got10k_sequence(Sequence_t):
         self.type=data_type
 
     def got10k_gt(self, type="val"):
-        if  self.type == "vot" or self.type=="votlt" or self.type=="votrgbd":
+        if  self.type == "vot2020" or self.type=="votlt" or self.type=="votrgbd":
             gtfile = os.path.join(self.dataset, self.name, "groundtruth.txt")
             colorimg = os.path.join(self.dataset, self.name, 'color')
             img = os.listdir(colorimg)
@@ -233,7 +233,7 @@ def analysis_tracker(idx):
     su = tracker._prsu.success_50()
     ao = tracker._prsu.AO()
     # print('Trackers: {:<30} success50: {} \t AO: {}'. format(tracker.name, su, ao)) 
-    print('Trackers: {:<30} success50: {:0.2f} \t AO: {:0.2f}'. format(tracker.name, su*100, ao*100)) 
+    print('"Trackers: {:<30} success50: {:0.2f} \t AO: {:0.2f}",'. format(tracker.name, su*100, ao*100)) 
 ##success or pr-r
 # with open('/ssd3/lz/dataset/UAV123/UAV20L.txt', 'r') as f:
 
@@ -249,6 +249,7 @@ if __name__ == '__main__':
     dataset = args.dataset
     result_dir = args.resultpath 
     got10k_dataset='/home/dataset4/cvpr2023/GOT-10K/'
+    vot2020_dataset = '/home/dataset4/cvpr2023/vot2020/sequences/'
 
     all_corp_type = args.allcorp
     alltype = ["gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
@@ -269,17 +270,16 @@ if __name__ == '__main__':
         tracker_list.sort()
         all_trackers = [got10k_tracker(name=tracker, path=result_dir) for tracker in tracker_list]
 
-    elif dataset == "vot":
-        with open('/ssd3/lz/dataset/vot2020-C/sequences/list.txt', 'r') as f:
+    elif dataset == "vot2020":
+        with open(os.path.join(vot2020_dataset, "list.txt"), 'r') as f:
             seq_value = f.readlines()
             for val in seq_value:
                 seqlist.append(val.split("\n")[0])
         # seqlist = ["fernandsso"]
-        all_sequence = [got10k_sequence(seq, dataset='/ssd3/lz/dataset/vot2020/sequences/', data_type="vot") for seq in seqlist] #got10k
-        tracker_list = os.listdir('/ssd3/lz/NIPS2022/111.5/vot2020-C/results/') # votlt2020
+        all_sequence = [got10k_sequence(seq, dataset=vot2020_dataset, data_type="vot2020") for seq in seqlist] #got10k
+        tracker_list = os.listdir(result_dir)
         tracker_list.sort()
-        tracker_list = ["stark_st50", "stark_st50-C"]
-        all_trackers = [got10k_tracker(name=tracker, path="/ssd3/lz/NIPS2022/111.5/vot2020-C/results/", type="vot") for tracker in tracker_list]
+        all_trackers = [got10k_tracker(name=tracker, path=result_dir, type="vot2020") for tracker in tracker_list]
 
     elif dataset == "votlt":
         with open('/ssd3/lz/dataset/votlt2020-C/sequences/list.txt', 'r') as f:

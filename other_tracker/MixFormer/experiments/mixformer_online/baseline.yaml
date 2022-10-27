@@ -106,7 +106,7 @@ TEST:
     GOT10K_TEST: [10]
     TRACKINGNET: [25]
     VOT20: [10]
-#    VOT20LT: [200]
+    VOT20LT: [200]
   ONLINE_SIZES:
     LASOT: [2]
     UAV: [1]
@@ -114,4 +114,4 @@ TEST:
     GOT10K_TEST: [2]
     TRACKINGNET: [1]
     VOT20: [5]
-#    VOT20LT: [3]
+    VOT20LT: [3]

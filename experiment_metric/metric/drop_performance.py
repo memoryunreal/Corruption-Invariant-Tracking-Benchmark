@@ -1,35 +1,33 @@
-clearn_dataset = [
-"Trackers: dimp_dimp18                    success50: 77.81        AO: 66.57",
-"Trackers: dimp_dimp50                    success50: 81.33        AO: 69.64",
-"Trackers: dimp_prdimp18                  success50: 81.42        AO: 70.48",
-"Trackers: dimp_prdimp50                  success50: 81.65        AO: 70.73",
-"Trackers: keep_track_default             success50: 85.38        AO: 74.54",
-"Trackers: keep_track_default_fast        success50: 86.75        AO: 75.29",
-"Trackers: kys_default                    success50: 81.93        AO: 69.84",
-"Trackers: mixformer1k                    success50: 89.27        AO: 79.51",
-"Trackers: mixformer1k-got                success50: 85.56        AO: 76.78",
-"Trackers: mixformer22k                   success50: 92.12        AO: 81.89",
-"Trackers: mixformer22k-got               success50: 89.00        AO: 79.38",
-"Trackers: mixformerL                     success50: 90.92        AO: 81.28",
-"Trackers: tomp_tomp101                   success50: 88.68        AO: 77.59",
-"Trackers: tomp_tomp50                    success50: 89.90        AO: 78.10",
+import os
+corp_dataset=[
+"Trackers: DiMP50                         success50: 56.88       AO: 48.29",
+"Trackers: PrDiMP18                       success50: 53.96       AO: 45.52",
+"Trackers: PrDiMP50                       success50: 54.92       AO: 47.01",
+"Trackers: DiMP18                         success50: 59.86       AO: 49.23",
+"Trackers: ToMP101                        success50: 72.00       AO: 59.06",
+"Trackers: ToMP50                         success50: 71.02       AO: 58.91",
+"Trackers: kys                            success50: 54.42       AO: 46.15",
+"Trackers: keeptrack                      success50: 63.03       AO: 52.43",
 ]
-cor_dataset = [
-"Trackers: dimp_dimp18                    success50: 86.10        AO: 73.00",
-"Trackers: dimp_dimp50                    success50: 88.91        AO: 75.38",
-"Trackers: dimp_prdimp18                  success50: 87.52        AO: 75.81",
-"Trackers: keep_track_default             success50: 92.22        AO: 80.78",
-"Trackers: dimp_prdimp50                  success50: 89.41        AO: 77.73",
-"Trackers: keep_track_default_fast        success50: 92.05        AO: 80.52",
-"Trackers: kys_default                    success50: 89.15        AO: 75.62",
-"Trackers: mixformer1k                    success50: 95.39        AO: 86.10",
-"Trackers: mixformer1k-got                success50: 94.69        AO: 85.66",
-"Trackers: mixformer22k                   success50: 94.56        AO: 84.95",
-"Trackers: mixformer22k-got               success50: 94.81        AO: 85.21",
-"Trackers: mixformerL                     success50: 94.83        AO: 85.84",
-"Trackers: tomp_tomp101                   success50: 93.64        AO: 83.01",
-"Trackers: tomp_tomp50                    success50: 94.71        AO: 83.87",
+clean_dataset=[
+"Trackers: DiMP18                         success50: 63.80       AO: 52.36",
+"Trackers: DiMP50                         success50: 71.15       AO: 58.84",
+"Trackers: PrDiMP18                       success50: 65.06       AO: 53.70",
+"Trackers: ToMP101                        success50: 82.95       AO: 68.20",
+"Trackers: ToMP50                         success50: 76.40       AO: 63.54",
+"Trackers: keeptrack                      success50: 76.37       AO: 63.29",
+"Trackers: PrDiMP50                       success50: 67.38       AO: 55.91",
+"Trackers: kys                            success50: 63.89       AO: 53.80",
 ]
 
 if __name__ == "__main__":
-    print("ok")
+    for i in range(len(clean_dataset)):
+        clean_sr = float(clean_dataset[i][52:57]) 
+        clean_ao = float(clean_dataset[i][68:74]) 
+        corp_sr = float(corp_dataset[i][52:57])
+        corp_ao = float(corp_dataset[i][68:74]) 
+        trackername = clean_dataset[i][10:40].split(" ")[0] # tracker name
+
+        drop_sr = (clean_sr - corp_sr) / clean_sr * 100
+        drop_ao = (clean_ao - corp_ao) / clean_ao * 100
+        print('{:<30} & {:<7.2f} & {:<7.2f} & {:.2f}({:<6.2f}) & {:.2f}({:<6.2f})'.format(trackername, clean_sr, clean_ao, corp_sr, drop_sr, corp_ao, drop_ao))

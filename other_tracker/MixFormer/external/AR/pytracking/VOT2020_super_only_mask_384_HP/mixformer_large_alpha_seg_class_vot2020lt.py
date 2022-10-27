@@ -80,7 +80,7 @@ def make_full_size(x, output_sz):
 
 refine_model_name = 'ARcm_coco_seg_only_mask_384'
 params = vot_params.parameters("baseline_large", model="mixformerL_online_22k.pth.tar")
-mixformer = MixFormerOnline(params, "VOT20")
+mixformer = MixFormerOnline(params, "VOT20lt")
 tracker = MIXFORMER_ALPHA_SEG(tracker=mixformer, refine_model_name=refine_model_name)
 # handle = vot.VOT("mask")
 handle = vot.VOT("rectangle")

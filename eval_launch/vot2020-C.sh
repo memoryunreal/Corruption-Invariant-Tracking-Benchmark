@@ -1,0 +1,1 @@
+python /home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/experiment_metric/metric/got10k_evaluation.py --dataset vot2020 --resultpath /home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/workspace/vot2020-C/results/
