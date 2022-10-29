@@ -1,0 +1,14 @@
+.idea/
+__pycache__/
+checkpoints/
+lib/test/evaluation/local.py
+lib/train/admin/local.py
+analysis/
+pytracking/networks
+VOT21/*/results
+VOT21/*/sequences
+VOT21/*/logs
+VOT21/*/analysis
+VOT21/*/cache
+lib/test/vot21_playground/legacy
+*.pyc
