@@ -9,9 +9,9 @@ import os
 filepath = os.path.abspath(__file__)
 prj_dir = os.path.abspath(os.path.join(os.path.dirname(filepath), "../../../.."))
 lib_dir = os.path.abspath(os.path.join(prj_dir, "lib"))
+tool_dir = os.path.abspath(os.path.join(prj_dir, "../../../tool_utils"))
 sys.path.append(prj_dir)
 sys.path.append(lib_dir)
-tool_dir = os.path.abspath(os.path.join(prj_dir, "../tool_utils/"))
 sys.path.append(tool_dir)
 
 import torch
@@ -284,7 +284,7 @@ def run_vot_exp(base_tracker, base_param, ref_tracker, ref_param, use_new_box, s
             '''
         blend
         '''
-        if depthth == 0 and blend == 0.0:
+        if not depthth == 0 and not blend == 0.0:
             image = rgbd_blend(imagefile, _, depthth, blend, style)
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         else:

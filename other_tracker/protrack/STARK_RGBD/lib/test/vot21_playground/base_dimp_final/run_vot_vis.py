@@ -4,7 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import sys
-
+from PIL import Image
 import os
 filepath = os.path.abspath(__file__)
 prj_dir = os.path.abspath(os.path.join(os.path.dirname(filepath), "../../../.."))
@@ -29,7 +29,6 @@ import sys
 import os 
 import argparse
 
-import logging
 '''
     function import
 '''
@@ -252,7 +251,7 @@ def run_vot_exp(base_tracker, base_param, ref_tracker, ref_param, use_new_box, s
                            ref_tracker=ref_tracker, ref_param=ref_param, use_new_box=use_new_box)
     handle = vot.VOT("rectangle", "rgbd")
     selection = handle.region()
-    imagefile, _ = handle.frame()
+    imagefile, eventfile = handle.frame()
     init_box = [selection.x, selection.y, selection.width, selection.height]
     if not imagefile:
         sys.exit(0)
@@ -265,15 +264,14 @@ def run_vot_exp(base_tracker, base_param, ref_tracker, ref_param, use_new_box, s
     '''
         blend
     '''
-    depth_threshold = 5000
-    dp = cv2.imread(_, -1)
-    try:
-        dp[dp>depth_threshold] = depth_threshold # ignore some large values,
-    except:
-        dp = dp
-    dp = cv2.normalize(dp, None, 0, 255, cv2.NORM_MINMAX)
-    dp = cv2.applyColorMap(np.uint8(dp), 2)
-    image = cv2.cvtColor(dp, cv2.COLOR_BGR2RGB)  # Right
+    if  not blend == 0.0:
+        colorf = cv2.imread(imagefile)
+        eventf = cv2.imread(eventfile)
+        blend_image = cv2.addWeighted(colorf, 1-blend, eventf, blend, 0)
+
+        image = cv2.cvtColor(blend_image, cv2.COLOR_BGR2RGB)
+    else:
+        image = cv2.cvtColor(cv2.imread(imagefile), cv2.COLOR_RGB2BGR)  # Right
     '''
         blend
     '''
@@ -282,21 +280,20 @@ def run_vot_exp(base_tracker, base_param, ref_tracker, ref_param, use_new_box, s
 
     cnt = 0
     while True:
-        imagefile, _ = handle.frame()
+        imagefile, eventfile = handle.frame()
         if not imagefile:
             break
         '''
-            blend
+        blend
         '''
-        depth_threshold = 5000
-        dp = cv2.imread(_, -1)
-        try:
-            dp[dp>depth_threshold] = depth_threshold # ignore some large values,
-        except:
-            dp = dp
-        dp = cv2.normalize(dp, None, 0, 255, cv2.NORM_MINMAX)
-        dp = cv2.applyColorMap(np.uint8(dp), 2)
-        image = cv2.cvtColor(dp, cv2.COLOR_BGR2RGB)  # Right
+        if  not blend == 0.0:
+            colorf = cv2.imread(imagefile)
+            eventf = cv2.imread(eventfile)
+            blend_image = cv2.addWeighted(colorf, 1-blend, eventf, blend,0)
+
+            image = cv2.cvtColor(blend_image, cv2.COLOR_BGR2RGB)
+        else:
+            image = cv2.cvtColor(cv2.imread(imagefile), cv2.COLOR_BGR2RGB)  # Right
         '''
             blend
         '''

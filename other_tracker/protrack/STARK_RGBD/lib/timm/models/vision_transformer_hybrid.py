@@ -20,7 +20,7 @@ from .layers import StdConv2dSame, StdConv2d, to_2tuple
 from .resnet import resnet26d, resnet50d
 from .resnetv2 import ResNetV2, create_resnetv2_stem
 from .registry import register_model
-from timm.models.vision_transformer import _create_vision_transformer
+from timm.models.vision_transformer import VisionTransformer as _create_vision_transformer
 
 
 def _cfg(url='', **kwargs):

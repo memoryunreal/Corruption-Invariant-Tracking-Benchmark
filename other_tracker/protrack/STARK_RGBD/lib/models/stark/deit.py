@@ -6,7 +6,7 @@ def deit(img_sz: int, pretrained: bool, model_name="vit_deit_base_distilled_patc
          ckpt_name="https://dl.fbaipublicfiles.com/deit/deit_base_distilled_patch16_384-d0272ac0.pth"):
     if ckpt_name.startswith('https'):
 
-        ckpt_name = '/home/lz/.cache/torch/hub/checkpoints/deit_base_distilled_patch16_384-d0272ac0.pth'
+        ckpt_name = '/home/dataset4/cvpr2023/networks/deit_base_distilled_patch16_384-d0272ac0.pth'
     model = create_model(model_name, pretrained=False, img_size=img_sz)
     if pretrained:
         if ckpt_name.startswith('https'):

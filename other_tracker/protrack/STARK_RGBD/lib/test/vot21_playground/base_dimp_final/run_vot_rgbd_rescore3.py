@@ -8,6 +8,8 @@ import os
 filepath = os.path.abspath(__file__)
 prj_dir = os.path.abspath(os.path.join(os.path.dirname(filepath), "../../../.."))
 lib_dir = os.path.abspath(os.path.join(prj_dir, "lib"))
+tool_dir = os.path.abspath(os.path.join(prj_dir, "../../../tool_utils"))
+sys.path.append(tool_dir)
 sys.path.append(prj_dir)
 sys.path.append(lib_dir)
 
@@ -21,10 +23,8 @@ from lib.test.evaluation import Tracker
 function import
 '''
 from vot import Rectangle
-import sys
-sys.path.append('/home/yangjinyu/rgbd_tracker/evaluation_tool/')
 from sre_tmp import Robustness
-import os 
+
 import argparse
 parser = argparse.ArgumentParser(description='GPU selection and SRE selection', prog='tracker')
 parser.add_argument("--gpu", default=0, type=int)
@@ -34,9 +34,6 @@ args = parser.parse_args()
 
 os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
 print('sre: '.format(args.sre))
-import logging
-log_path = os.path.join('/data1/yjy/rgbd_benchmark/all_benchmark/', 'normal.log')
-logging.basicConfig(filename=log_path, level=logging.DEBUG, filemode='a', format='%(levelname)s:%(asctime)s:%(message)s', datefmt='%Y-%d-%m %H:%M:%S')
 '''
     function import
 '''
@@ -270,7 +267,6 @@ def run_vot_exp(base_tracker, base_param, ref_tracker, ref_param, use_new_box, s
         logging
     '''
     imagefile, _ = handle.frame()
-    logging.info('tracker: iiau_rgbd sre_type:{} gpu:{} image_file1:{}'.format(args.sre, args.gpu, imagefile))
     init_box = [selection.x, selection.y, selection.width, selection.height]
     if not imagefile:
         sys.exit(0)
