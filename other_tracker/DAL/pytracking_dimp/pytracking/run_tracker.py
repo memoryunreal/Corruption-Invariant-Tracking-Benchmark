@@ -11,6 +11,7 @@ from pytracking.evaluation.nfsdataset import NFSDataset
 from pytracking.evaluation.uavdataset import UAVDataset
 from pytracking.evaluation.tpldataset import TPLDataset, TPLDatasetNoOtb
 from pytracking.evaluation.votdataset import VOTDataset
+from pytracking.evaluation.uavtestdataset import UAVTESTDataset
 from pytracking.evaluation.lasotdataset import LaSOTDataset
 from pytracking.evaluation.trackingnetdataset import TrackingNetDataset
 from pytracking.evaluation.got10kdataset import GOT10KDatasetTest, GOT10KDatasetVal, GOT10KDatasetLTRVal
@@ -26,13 +27,13 @@ from pytracking.evaluation.depthtrackdataset import DepthTrackDataset
 
 
 def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', sequence=None, debug=0, threads=0,
-                visdom_info=None):
+                visdom_info=None, result_name=None, datasetpath=None):
     """Run tracker on sequence or dataset.
     args:
         tracker_name: Name of tracking method.
         tracker_param: Name of parameter file.
         run_id: The run id.
-        dataset_name: Name of dataset (otb, nfs, uav, tpl, vot, tn, gott, gotv, lasot).
+        dataset_name: Name of dataset (otb, nfs, uav, tpl, vot, tn, gott, gotv, lasot, uavtest).
         sequence: Sequence number or name.
         debug: Debug level.
         threads: Number of threads.
@@ -73,13 +74,15 @@ def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', se
         dataset = VOTDDataset()
     elif dataset_name == 'depthtrack':
         dataset = DepthTrackDataset()
+    elif dataset_name == 'uavtest':
+        dataset = UAVTESTDataset()
     else:
         raise ValueError('Unknown dataset name')
 
     if sequence is not None:
         dataset = [dataset[sequence]]
 
-    trackers = [Tracker(tracker_name, tracker_param, run_id)]
+    trackers = [Tracker(tracker_name, tracker_param, run_id, resultname=result_name)]
 
     run_dataset(dataset, trackers, debug, threads, visdom_info=visdom_info)
 
@@ -96,11 +99,15 @@ def main():
     parser.add_argument('--use_visdom', type=bool, default=False, help='Flag to enable visdom')
     parser.add_argument('--visdom_server', type=str, default='127.0.0.1', help='Server for visdom')
     parser.add_argument('--visdom_port', type=int, default=8097, help='Port for visdom')
+    parser.add_argument('--result_name', type=str, default='', help='result_name.')
+    parser.add_argument('--datasetpath', type=str, default=None, help='set your datasetpath without local.py')
+    parser.add_argument('--gpuid', type=str, default='0', help='gpu id.')
 
     args = parser.parse_args()
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.gpuid
 
     run_tracker(args.tracker_name, args.tracker_param, args.runid, args.dataset, args.sequence, args.debug, args.threads,
-                {'use_visdom': args.use_visdom, 'server': args.visdom_server, 'port': args.visdom_port})
+                {'use_visdom': args.use_visdom, 'server': args.visdom_server, 'port': args.visdom_port}, result_name = args.result_name, datasetpath=args.datasetpath)
 
 
 if __name__ == '__main__':

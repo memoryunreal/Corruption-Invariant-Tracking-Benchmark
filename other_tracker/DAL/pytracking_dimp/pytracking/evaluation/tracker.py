@@ -12,14 +12,16 @@ class Tracker:
         run_id: The run id.
     """
 
-    def __init__(self, name: str, parameter_name: str, run_id: int = None):
+    def __init__(self, name: str, parameter_name: str, run_id: int = None, resultname=None):
         self.name = name
         self.parameter_name = parameter_name
         self.run_id = run_id
+        self.resultname = resultname
 
         env = env_settings()
         if self.run_id is None:
-            self.results_dir = '{}/{}/{}'.format(env.results_path, self.name, self.parameter_name)
+            # self.results_dir = '{}/{}/{}'.format(env.results_path, self.name, self.parameter_name)
+            self.results_dir = self.resultname
         else:
             self.results_dir = '{}/{}/{}_{:03d}'.format(env.results_path, self.name, self.parameter_name, self.run_id)
         if not os.path.exists(self.results_dir):

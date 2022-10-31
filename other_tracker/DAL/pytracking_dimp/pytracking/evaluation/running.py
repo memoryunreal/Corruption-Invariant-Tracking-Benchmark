@@ -10,10 +10,13 @@ def run_sequence(seq: Sequence, tracker: Tracker, debug=False, visdom_info=None)
 
     visdom_info = {} if visdom_info is None else visdom_info
 
-    base_results_path = '{}/{}'.format(tracker.results_dir, seq.name)
-    results_path = '{}.txt'.format(base_results_path)
-    times_path = '{}_time.txt'.format(base_results_path)
-    scores_path = '{}_scores.txt'.format(base_results_path)
+    # base_results_path = '{}/{}/{}'.format(tracker.results_dir, seq.name, seq.name)
+    base_results_path = os.path.join(tracker.results_dir, seq.name)
+    if not os.path.exists(base_results_path):
+        os.makedirs(base_results_path)
+    results_path = os.path.join(base_results_path, '{}_001.txt'.format(seq.name))
+    times_path = os.path.join(base_results_path,'{}_time.txt'.format(seq.name))
+    scores_path = os.path.join(base_results_path,'{}_scores.txt'.format(seq.name))
 
     if os.path.isfile(results_path) and not debug:
         return
@@ -22,13 +25,14 @@ def run_sequence(seq: Sequence, tracker: Tracker, debug=False, visdom_info=None)
 
     if debug:
         output = tracker.run(seq, debug=debug, visdom_info=visdom_info)
+    # else:
+    #     try:
+    #         output = tracker.run(seq, debug=debug, visdom_info=visdom_info)
+    #     except Exception as e:
+    #         print(e)
+    #         return
     else:
-        try:
-            output = tracker.run(seq, debug=debug, visdom_info=visdom_info)
-        except Exception as e:
-            print(e)
-            return
-
+        output = tracker.run(seq, debug=debug, visdom_info=visdom_info)
 
     tracked_bb = np.array(output['target_bbox']).astype(int)
     exec_times = np.array(output['time']).astype(float)
@@ -36,9 +40,9 @@ def run_sequence(seq: Sequence, tracker: Tracker, debug=False, visdom_info=None)
 
     print('FPS: {}'.format(len(exec_times) / exec_times.sum()))
     if not debug:
-        np.savetxt(results_path, tracked_bb, delimiter='\t', fmt='%d')
-        np.savetxt(times_path, exec_times, delimiter='\t', fmt='%f')
-        np.savetxt(scores_path, scores, delimiter='\t', fmt='%.2f')
+        np.savetxt(results_path, tracked_bb, delimiter=',', fmt='%d')
+        np.savetxt(times_path, exec_times, delimiter=',', fmt='%f')
+        np.savetxt(scores_path, scores, delimiter=',', fmt='%.2f')
 
 
 def run_dataset(dataset, trackers, debug=False, threads=0, visdom_info=None):

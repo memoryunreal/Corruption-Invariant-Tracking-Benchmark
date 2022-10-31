@@ -7,7 +7,7 @@ def local_env_settings():
 
     settings.got10k_path = ''
     settings.lasot_path = ''
-    settings.network_path = '/home/yan/Data2/DeT-models/'    # Where tracking networks are stored.
+    settings.network_path = '/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/DAL/pytracking_dimp/pytracking/networks/'    # Where tracking networks are stored.
     settings.nfs_path = ''
     settings.otb_path = ''
     settings.results_path = '/home/yan/Data2/DAL/results/'    # Where to store tracking results
@@ -16,6 +16,7 @@ def local_env_settings():
     settings.uav_path = ''
     settings.vot_path = ''
     settings.votd_path = '/home/yans/Datasets/CDTB'
+    settings.uavtest_path = '/home/dataset4/cvpr2023/uav-test/sequences/'
     settings.depthtrack_path = '/home/yan/Data2/ICCV2021-RGBD-DepthTrack/sequences/'
 
     return settings
