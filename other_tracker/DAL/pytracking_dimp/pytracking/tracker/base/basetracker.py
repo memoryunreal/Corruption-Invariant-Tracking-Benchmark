@@ -522,11 +522,18 @@ class BaseTracker:
         FULL_KERNEL_31 = np.ones((31, 31), np.uint8)
 
 
-        depth = cv.imread(image_file, cv.COLOR_BGR2GRAY)
+        # depth = cv.imread(image_file, cv.COLOR_BGR2GRAY)
+        depth = cv.imread(image_file, -1)
+      
         #print(['_read_depth', depth.min(), depth.max(), depth.mean(), depth.std()])
         if 'Princeton' in image_file: #depth.max()>=60000: # bug found, we need to bitshift depth.
             depth=np.bitwise_or(np.right_shift(depth,3),np.left_shift(depth,13))
-        depth=depth/1000.0
+        if len(depth.shape) == 3:
+            depth = cv.cvtColor(depth, cv.COLOR_BGR2GRAY)
+        else:
+            depth=depth/1000.0
+
+
         depth[depth>=8.0]=8.0
         depth[depth<=0.0]=8.0
         #depth=8.0-depth
