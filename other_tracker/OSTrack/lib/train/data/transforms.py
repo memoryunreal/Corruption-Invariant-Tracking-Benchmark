@@ -5,7 +5,11 @@ import cv2 as cv
 import torch
 import torch.nn.functional as F
 import torchvision.transforms.functional as tvisf
-
+import sys
+import os
+sys.path.append(os.path.abspath(__file__))
+from .augmentations.augmix import augmix
+from PIL import Image
 
 class Transform:
     """A set of transformations, used for e.g. data augmentation.
@@ -333,3 +337,20 @@ class RandomHorizontalFlip_Norm(RandomHorizontalFlip):
             coords_flip[1,:] = 1 - coords[1,:]
             return coords_flip
         return coords
+
+# input PIL, output PIL, put on the top of all transforms
+class augmix_transform(TransformBase):
+    def __init__(self, level=0, width=3, depth=-1, alpha=1.):
+        super().__init__()
+        self.level = level
+        self.width = width
+        self.depth = depth
+        self.alpha = alpha
+
+    def transform_image(self, image):
+        img = augmix(np.asarray(image) / 255)
+        img = np.clip(img * 255., 0, 255).astype(np.uint8)
+        # img = Image.fromarray(img)
+        return img
+
+

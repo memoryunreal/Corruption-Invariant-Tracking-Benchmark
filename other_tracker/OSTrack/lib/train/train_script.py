@@ -19,7 +19,7 @@ import importlib
 from ..utils.focal_loss import FocalLoss
 
 
-def run(settings):
+def run(settings, use_trackmix=False):
     settings.description = 'Training script for STARK-S, STARK-ST stage1, and STARK-ST stage2'
 
     # update the default configs with config file
@@ -45,7 +45,7 @@ def run(settings):
     settings.log_file = os.path.join(log_dir, "%s-%s.log" % (settings.script_name, settings.config_name))
 
     # Build dataloaders
-    loader_train, loader_val = build_dataloaders(cfg, settings)
+    loader_train, loader_val = build_dataloaders(cfg, settings, use_trackmix)
 
     if "RepVGG" in cfg.MODEL.BACKBONE.TYPE or "swin" in cfg.MODEL.BACKBONE.TYPE or "LightTrack" in cfg.MODEL.BACKBONE.TYPE:
         cfg.ckpt_dir = settings.save_dir
@@ -82,7 +82,7 @@ def run(settings):
     # Optimizer, parameters, and learning rates
     optimizer, lr_scheduler = get_optimizer_scheduler(net, cfg)
     use_amp = getattr(cfg.TRAIN, "AMP", False)
-    trainer = LTRTrainer(actor, [loader_train, loader_val], optimizer, settings, lr_scheduler, use_amp=use_amp)
+    trainer = LTRTrainer(actor, [loader_train, loader_val], optimizer, settings, lr_scheduler, use_amp=use_amp, use_trackmix=use_trackmix)
 
     # train process
     trainer.train(cfg.TRAIN.EPOCH, load_latest=True, fail_safe=True)

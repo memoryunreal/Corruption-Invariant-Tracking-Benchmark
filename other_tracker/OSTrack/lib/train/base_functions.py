@@ -94,8 +94,11 @@ def names2datasets(name_list: list, settings, image_loader):
     return datasets
 
 
-def build_dataloaders(cfg, settings):
-    # Data transform
+def build_dataloaders(cfg, settings, use_track_mix=False):
+    # Data transform trackmix aug
+    transform_joint_aug = tfm.Transform(tfm.augmix_transform())
+    transform_joint_aug_1 = tfm.Transform(tfm.augmix_transform())
+
     transform_joint = tfm.Transform(tfm.ToGrayscale(probability=0.05),
                                     tfm.RandomHorizontalFlip(probability=0.5))
 
@@ -109,7 +112,24 @@ def build_dataloaders(cfg, settings):
     # The tracking pairs processing module
     output_sz = settings.output_sz
     search_area_factor = settings.search_area_factor
+    if use_track_mix:
+        data_processing_train_aug = processing.STARKProcessing(search_area_factor=search_area_factor,
+                                                        output_sz=output_sz,
+                                                        center_jitter_factor=settings.center_jitter_factor,
+                                                        scale_jitter_factor=settings.scale_jitter_factor,
+                                                        mode='sequence',
+                                                        transform=transform_train,
+                                                        joint_transform=transform_joint_aug,
+                                                        settings=settings)
 
+        data_processing_train_aug_1 = processing.STARKProcessing(search_area_factor=search_area_factor,
+                                                        output_sz=output_sz,
+                                                        center_jitter_factor=settings.center_jitter_factor,
+                                                        scale_jitter_factor=settings.scale_jitter_factor,
+                                                        mode='sequence',
+                                                        transform=transform_train,
+                                                        joint_transform=transform_joint_aug_1,
+                                                       settings=settings)
     data_processing_train = processing.STARKProcessing(search_area_factor=search_area_factor,
                                                        output_sz=output_sz,
                                                        center_jitter_factor=settings.center_jitter_factor,
@@ -118,7 +138,6 @@ def build_dataloaders(cfg, settings):
                                                        transform=transform_train,
                                                        joint_transform=transform_joint,
                                                        settings=settings)
-
     data_processing_val = processing.STARKProcessing(search_area_factor=search_area_factor,
                                                      output_sz=output_sz,
                                                      center_jitter_factor=settings.center_jitter_factor,
@@ -134,12 +153,22 @@ def build_dataloaders(cfg, settings):
     sampler_mode = getattr(cfg.DATA, "SAMPLER_MODE", "causal")
     train_cls = getattr(cfg.TRAIN, "TRAIN_CLS", False)
     print("sampler_mode", sampler_mode)
-    dataset_train = sampler.TrackingSampler(datasets=names2datasets(cfg.DATA.TRAIN.DATASETS_NAME, settings, opencv_loader),
-                                            p_datasets=cfg.DATA.TRAIN.DATASETS_RATIO,
-                                            samples_per_epoch=cfg.DATA.TRAIN.SAMPLE_PER_EPOCH,
-                                            max_gap=cfg.DATA.MAX_SAMPLE_INTERVAL, num_search_frames=settings.num_search,
-                                            num_template_frames=settings.num_template, processing=data_processing_train,
-                                            frame_sample_mode=sampler_mode, train_cls=train_cls)
+
+    # trackmix
+    if use_track_mix:
+        dataset_train = sampler.TrackingSampler(datasets=names2datasets(cfg.DATA.TRAIN.DATASETS_NAME, settings, opencv_loader),
+                                                p_datasets=cfg.DATA.TRAIN.DATASETS_RATIO,
+                                                samples_per_epoch=cfg.DATA.TRAIN.SAMPLE_PER_EPOCH,
+                                                max_gap=cfg.DATA.MAX_SAMPLE_INTERVAL, num_search_frames=settings.num_search,
+                                                num_template_frames=settings.num_template, processing=data_processing_train, processing_aug=data_processing_train_aug, processing_aug_1=data_processing_train_aug_1,
+                                                frame_sample_mode=sampler_mode, train_cls=train_cls, use_trackmix=use_track_mix)
+    else:
+        dataset_train = sampler.TrackingSampler(datasets=names2datasets(cfg.DATA.TRAIN.DATASETS_NAME, settings, opencv_loader),
+                                        p_datasets=cfg.DATA.TRAIN.DATASETS_RATIO,
+                                        samples_per_epoch=cfg.DATA.TRAIN.SAMPLE_PER_EPOCH,
+                                        max_gap=cfg.DATA.MAX_SAMPLE_INTERVAL, num_search_frames=settings.num_search,
+                                        num_template_frames=settings.num_template, processing=data_processing_train,
+                                        frame_sample_mode=sampler_mode, train_cls=train_cls)
 
     train_sampler = DistributedSampler(dataset_train) if settings.local_rank != -1 else None
     shuffle = False if settings.local_rank != -1 else True

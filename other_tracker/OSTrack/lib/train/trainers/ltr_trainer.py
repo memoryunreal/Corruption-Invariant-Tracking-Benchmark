@@ -16,7 +16,7 @@ from lib.utils.misc import get_world_size
 
 
 class LTRTrainer(BaseTrainer):
-    def __init__(self, actor, loaders, optimizer, settings, lr_scheduler=None, use_amp=False):
+    def __init__(self, actor, loaders, optimizer, settings, lr_scheduler=None, use_amp=False, use_trackmix=False):
         """
         args:
             actor - The actor for training the network
@@ -27,7 +27,7 @@ class LTRTrainer(BaseTrainer):
             lr_scheduler - Learning rate scheduler
         """
         super().__init__(actor, loaders, optimizer, settings, lr_scheduler)
-
+        self.use_trackmix = use_trackmix
         self._set_default_settings()
 
         # Initialize statistics variables
@@ -71,47 +71,118 @@ class LTRTrainer(BaseTrainer):
 
         self._init_timing()
 
-        for i, data in enumerate(loader, 1):
-            self.data_read_done_time = time.time()
-            # get inputs
-            if self.move_data_to_gpu:
-                data = data.to(self.device)
+        # if self.use_trackmix:
+        #     data =
+        # else: 
+        #     data
+        if self.use_trackmix:
+            for i, (data, data_aug, data_aug_1) in enumerate(loader, 1):
+            
+                self.data_read_done_time = time.time()
+                # get inputs 
+                
 
-            self.data_to_gpu_time = time.time()
+                if self.move_data_to_gpu:
+                    data = data.to(self.device)
+                    data_aug = data_aug.to(self.device)
+                    data_aug_1 = data_aug_1.to(self.device)
 
-            data['epoch'] = self.epoch
-            data['settings'] = self.settings
-            # forward pass
-            if not self.use_amp:
-                loss, stats = self.actor(data)
-            else:
-                with autocast():
-                    loss, stats = self.actor(data)
+                self.data_to_gpu_time = time.time()
 
-            # backward pass and update weights
-            if loader.training:
-                self.optimizer.zero_grad()
+                data['epoch'] = self.epoch
+                data['settings'] = self.settings
+                
+                data_aug['epoch'] = self.epoch
+                data_aug['settings'] = self.settings
+
+
+                data_aug_1['epoch'] = self.epoch
+                data_aug_1['settings'] = self.settings
+                # forward pass
                 if not self.use_amp:
-                    loss.backward()
-                    if self.settings.grad_clip_norm > 0:
-                        torch.nn.utils.clip_grad_norm_(self.actor.net.parameters(), self.settings.grad_clip_norm)
-                    self.optimizer.step()
+                    loss, stats = self.actor(data,data_aug, data_aug_1)    
                 else:
-                    self.scaler.scale(loss).backward()
-                    self.scaler.step(self.optimizer)
-                    self.scaler.update()
+                    with autocast():
+                        loss, stats = self.actor(data)
 
-            # update statistics
-            batch_size = data['template_images'].shape[loader.stack_dim]
-            self._update_stats(stats, batch_size, loader)
+                # backward pass and update weights
+                if loader.training:
+                    self.optimizer.zero_grad()
+                    # torch.autograd.set_detect_anomaly(True)
 
-            # print statistics
-            self._print_stats(i, loader, batch_size)
+                    if not self.use_amp:
+                        loss.backward()
+                        # loss_mix.backward(retain_graph=True)
+                        if self.settings.grad_clip_norm > 0:
+                            torch.nn.utils.clip_grad_norm_(self.actor.net.parameters(), self.settings.grad_clip_norm)
+                        self.optimizer.step()
+                    else:
+                        self.scaler.scale(loss).backward()
+                        self.scaler.step(self.optimizer)
+                        self.scaler.update()
 
-            # update wandb status
-            if self.wandb_writer is not None and i % self.settings.print_interval == 0:
-                if self.settings.local_rank in [-1, 0]:
-                    self.wandb_writer.write_log(self.stats, self.epoch)
+                # update statistics
+                batch_size = data['template_images'].shape[loader.stack_dim]
+                self._update_stats(stats, batch_size, loader)
+
+                # print statistics
+                self._print_stats(i, loader, batch_size)
+
+                # update wandb status
+                if self.wandb_writer is not None and i % self.settings.print_interval == 0:
+                    if self.settings.local_rank in [-1, 0]:
+                        self.wandb_writer.write_log(self.stats, self.epoch)
+        else:
+            for i, data in enumerate(loader, 1):
+                
+                self.data_read_done_time = time.time()
+                # get inputs 
+                
+
+                if self.move_data_to_gpu:
+                    data = data.to(self.device)
+
+                self.data_to_gpu_time = time.time()
+
+                data['epoch'] = self.epoch
+                data['settings'] = self.settings
+                
+                # forward pass
+                if not self.use_amp:
+
+                    loss, stats = self.actor(data)
+                        
+                else:
+                    with autocast():
+                        loss, stats = self.actor(data)
+
+                # backward pass and update weights
+                if loader.training:
+                    self.optimizer.zero_grad()
+                    torch.autograd.set_detect_anomaly(True)
+
+                    if not self.use_amp:
+                        loss.backward()
+                        # loss_mix.backward(retain_graph=True)
+                        if self.settings.grad_clip_norm > 0:
+                            torch.nn.utils.clip_grad_norm_(self.actor.net.parameters(), self.settings.grad_clip_norm)
+                        self.optimizer.step()
+                    else:
+                        self.scaler.scale(loss).backward()
+                        self.scaler.step(self.optimizer)
+                        self.scaler.update()
+
+                # update statistics
+                batch_size = data['template_images'].shape[loader.stack_dim]
+                self._update_stats(stats, batch_size, loader)
+
+                # print statistics
+                self._print_stats(i, loader, batch_size)
+
+                # update wandb status
+                if self.wandb_writer is not None and i % self.settings.print_interval == 0:
+                    if self.settings.local_rank in [-1, 0]:
+                        self.wandb_writer.write_log(self.stats, self.epoch)
 
         # calculate ETA after every epoch
         epoch_time = self.prev_time - self.start_time

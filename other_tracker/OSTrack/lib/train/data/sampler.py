@@ -2,7 +2,7 @@ import random
 import torch.utils.data
 from lib.utils import TensorDict
 import numpy as np
-
+import copy
 
 def no_processing(data):
     return data
@@ -21,8 +21,8 @@ class TrackingSampler(torch.utils.data.Dataset):
     """
 
     def __init__(self, datasets, p_datasets, samples_per_epoch, max_gap,
-                 num_search_frames, num_template_frames=1, processing=no_processing, frame_sample_mode='causal',
-                 train_cls=False, pos_prob=0.5):
+                 num_search_frames, num_template_frames=1, processing=no_processing, processing_aug=no_processing, processing_aug_1=no_processing, frame_sample_mode='causal',
+                 train_cls=False, pos_prob=0.5, use_trackmix=False):
         """
         args:
             datasets - List of datasets to be used for training
@@ -52,6 +52,11 @@ class TrackingSampler(torch.utils.data.Dataset):
         self.num_search_frames = num_search_frames
         self.num_template_frames = num_template_frames
         self.processing = processing
+        # track mix 
+        self.use_trackmix = use_trackmix
+        self.processing_aug = processing_aug
+        self.processing_aug_1 = processing_aug_1
+
         self.frame_sample_mode = frame_sample_mode
 
     def __len__(self):
@@ -154,6 +159,7 @@ class TrackingSampler(torch.utils.data.Dataset):
                 search_masks = search_anno['mask'] if 'mask' in search_anno else [torch.zeros((H, W))] * self.num_search_frames
 
                 data = TensorDict({'template_images': template_frames,
+
                                    'template_anno': template_anno['bbox'],
                                    'template_masks': template_masks,
                                    'search_images': search_frames,
@@ -161,15 +167,38 @@ class TrackingSampler(torch.utils.data.Dataset):
                                    'search_masks': search_masks,
                                    'dataset': dataset.get_name(),
                                    'test_class': meta_obj_test.get('object_class_name')})
+                if self.use_trackmix:
+                    data_aug = TensorDict({'template_images': template_frames,
+                                    'template_anno': template_anno['bbox'],
+                                    'template_masks': template_masks,
+                                    'search_images': search_frames,
+                                    'search_anno': search_anno['bbox'],
+                                    'search_masks': search_masks,
+                                    'dataset': dataset.get_name(),
+                                    'test_class': meta_obj_test.get('object_class_name')}) 
+
+                    data_aug_1 = TensorDict({'template_images': template_frames,
+                                    'template_anno': template_anno['bbox'],
+                                    'template_masks': template_masks,
+                                    'search_images': search_frames,
+                                    'search_anno': search_anno['bbox'],
+                                    'search_masks': search_masks,
+                                    'dataset': dataset.get_name(),
+                                    'test_class': meta_obj_test.get('object_class_name')}) 
                 # make data augmentation
                 data = self.processing(data)
+                if self.use_trackmix:
+                    data_aug = self.processing_aug(data_aug)
+                    data_aug_1 = self.processing_aug_1(data_aug_1)
 
                 # check whether data is valid
                 valid = data['valid']
             except:
                 valid = False
-
-        return data
+        if self.use_trackmix:
+            return data, data_aug, data_aug_1
+        else:
+            return data
 
     def getitem_cls(self):
         # get data for classification

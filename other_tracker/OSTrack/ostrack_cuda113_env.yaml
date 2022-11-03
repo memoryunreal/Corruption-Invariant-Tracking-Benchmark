@@ -1,4 +1,4 @@
-name: false
+name: ostrack
 channels:
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge

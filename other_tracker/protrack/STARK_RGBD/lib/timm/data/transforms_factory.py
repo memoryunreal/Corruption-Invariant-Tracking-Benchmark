@@ -4,14 +4,15 @@ Factory methods for building image transforms for use with TIMM (PyTorch Image M
 Hacked together by / Copyright 2020 Ross Wightman
 """
 import math
-
+import sys
 import torch
 from torchvision import transforms
-
-from timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, DEFAULT_CROP_PCT
-from timm.data.auto_augment import rand_augment_transform, augment_and_mix_transform, auto_augment_transform
-from timm.data.transforms import _pil_interp, RandomResizedCropAndInterpolation, ToNumpy, ToTensor
-from timm.data.random_erasing import RandomErasing
+import os
+sys.path.insert(1, os.path.join(os.path.abspath(__file__), "../.."))
+from lib.timm.data.constants import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD, DEFAULT_CROP_PCT
+from lib.timm.data.auto_augment import rand_augment_transform, augment_and_mix_transform, auto_augment_transform
+from lib.timm.data.transforms import _pil_interp, RandomResizedCropAndInterpolation, ToNumpy, ToTensor
+from lib.timm.data.random_erasing import RandomErasing
 
 
 def transforms_noaug_train(

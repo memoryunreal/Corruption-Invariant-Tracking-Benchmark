@@ -1,2 +1,9 @@
 other_tracker/updt
 *.pyc
+events.out.tfevents*
+other_tracker/OSTrack/tensorboard/*
+*/wandb
+other_tracker/OSTrack/tensorboard/train/ostrack/vitb_256_mae_ce_32x4_got10k_ep100_mix/train/events.out.tfevents.1667448655.9e61af2c327d.53591.0
+other_tracker/OSTrack/tensorboard/train/ostrack/vitb_256_mae_ce_32x4_got10k_ep100_mix/wandb/run-20221103_121055-1nlnaaga/files/output.log
+other_tracker/OSTrack/tensorboard/train/ostrack/vitb_256_mae_ce_32x4_got10k_ep100_mix/wandb/run-20221103_121055-1nlnaaga/logs/debug-internal.log
+other_tracker/OSTrack/tensorboard/train/ostrack/vitb_256_mae_ce_32x4_got10k_ep100_mix/train/events.out.tfevents.1667448655.9e61af2c327d.53591.0

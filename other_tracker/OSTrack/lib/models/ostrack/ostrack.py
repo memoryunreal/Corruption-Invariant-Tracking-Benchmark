@@ -42,12 +42,34 @@ class OSTrack(nn.Module):
                 ce_template_mask=None,
                 ce_keep_rate=None,
                 return_last_attn=False,
+                template_aug: torch.Tensor = None,
+                search_aug: torch.Tensor=None,
+                ce_template_mask_aug=None,
+                ce_keep_rate_aug=None,
+                return_last_attn_aug=False,
+                template_aug_1: torch.Tensor = None,
+                search_aug_1: torch.Tensor=None,
+                ce_template_mask_aug_1=None,
+                ce_keep_rate_aug_1=None,
+                return_last_attn_aug_1=False,
                 ):
         x, aux_dict = self.backbone(z=template, x=search,
                                     ce_template_mask=ce_template_mask,
                                     ce_keep_rate=ce_keep_rate,
                                     return_last_attn=return_last_attn, )
 
+        if not template_aug_1 is None:
+            x_aug, aux_dict_aug = self.backbone(z=template_aug, x=search_aug,
+                                        ce_template_mask=ce_template_mask_aug,
+                                        ce_keep_rate=ce_keep_rate_aug,
+                                        return_last_attn=return_last_attn_aug, )
+
+            x_aug_1, aux_dict_aug_1 = self.backbone(z=template_aug_1, x=search_aug_1,
+                                        ce_template_mask=ce_template_mask_aug_1,
+                                        ce_keep_rate=ce_keep_rate_aug_1,
+                                        return_last_attn=return_last_attn_aug_1, )
+                        
+                        
         # Forward head
         feat_last = x
         if isinstance(x, list):
@@ -56,7 +78,10 @@ class OSTrack(nn.Module):
 
         out.update(aux_dict)
         out['backbone_feat'] = x
-        return out
+        if not template_aug_1 is None:
+            return out,x_aug,x_aug_1
+        else:
+            return out
 
     def forward_head(self, cat_feature, gt_score_map=None):
         """

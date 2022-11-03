@@ -288,6 +288,7 @@ def run_vot_exp(base_tracker, base_param, ref_tracker, ref_param, use_new_box, s
         '''
             blend
         '''
+        # depth_threshold = 5000
         depth_threshold = 5000
         dp = cv2.imread(_, -1)
         try:

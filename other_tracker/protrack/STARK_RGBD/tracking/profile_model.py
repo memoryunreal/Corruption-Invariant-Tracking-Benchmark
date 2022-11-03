@@ -17,7 +17,7 @@ def parse_args():
     """
     parser = argparse.ArgumentParser(description='Parse args for training')
     # for train
-    parser.add_argument('--script', type=str, default='stark_s', choices=['stark_s', 'stark_st2', 'stark_s_plus'],
+    parser.add_argument('--script', type=str, default='stark_st2', choices=['stark_s', 'stark_st2', 'stark_s_plus'],
                         help='training script name')
     parser.add_argument('--config', type=str, default='baseline', help='yaml configure file name')
     args = parser.parse_args()
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     # Compute the Flops and Params of our STARK-S model
     args = parse_args()
     '''update cfg'''
-    yaml_fname = 'experiments/%s/%s.yaml' % (args.script, args.config)
+    yaml_fname = '/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/protrack/STARK_RGBD/experiments/%s/%s.yaml' % (args.script, args.config)
     config_module = importlib.import_module('lib.config.%s.config' % args.script)
     cfg = config_module.cfg
     config_module.update_config_from_file(yaml_fname)
