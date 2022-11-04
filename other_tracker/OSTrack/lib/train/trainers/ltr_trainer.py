@@ -50,6 +50,9 @@ class LTRTrainer(BaseTrainer):
         self.move_data_to_gpu = getattr(settings, 'move_data_to_gpu', True)
         self.settings = settings
         self.use_amp = use_amp
+
+        self.start_load_time = 0 
+
         if use_amp:
             self.scaler = GradScaler()
 
@@ -71,6 +74,11 @@ class LTRTrainer(BaseTrainer):
 
         self._init_timing()
 
+        mv_gpu_time = 0
+        forward_time = 0
+        backward_update_time = 0
+        get_input_time = 0
+
         # if self.use_trackmix:
         #     data =
         # else: 
@@ -79,13 +87,17 @@ class LTRTrainer(BaseTrainer):
             for i, (data, data_aug, data_aug_1) in enumerate(loader, 1):
             
                 self.data_read_done_time = time.time()
+                get_input_time += self.data_read_done_time-self.start_load_time
                 # get inputs 
                 
-
+                # mv data to gpu time:
+                start_mv_gpu = time.time()
                 if self.move_data_to_gpu:
                     data = data.to(self.device)
                     data_aug = data_aug.to(self.device)
                     data_aug_1 = data_aug_1.to(self.device)
+                end_mv_gpu = time.time()
+                mv_gpu_time += end_mv_gpu-start_mv_gpu
 
                 self.data_to_gpu_time = time.time()
 
@@ -98,14 +110,20 @@ class LTRTrainer(BaseTrainer):
 
                 data_aug_1['epoch'] = self.epoch
                 data_aug_1['settings'] = self.settings
+
+                
                 # forward pass
+                start_forward =  time.time()
                 if not self.use_amp:
                     loss, stats = self.actor(data,data_aug, data_aug_1)    
                 else:
                     with autocast():
                         loss, stats = self.actor(data)
+                end_forward = time.time()
+                forward_time += end_forward - start_forward
 
                 # backward pass and update weights
+                start_backward_update = time.time()
                 if loader.training:
                     self.optimizer.zero_grad()
                     # torch.autograd.set_detect_anomaly(True)
@@ -120,7 +138,12 @@ class LTRTrainer(BaseTrainer):
                         self.scaler.scale(loss).backward()
                         self.scaler.step(self.optimizer)
                         self.scaler.update()
-
+                end_backward_update = time.time()
+                backward_update_time += end_backward_update-start_backward_update
+                timelogfile = open('/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/OSTrack/aug_time/time.log', 'a')
+                print("get_input: {} mv_to_gpu: {}, forward: {}, backwardU: {}, batch: {}".format(get_input_time/i, mv_gpu_time/i, forward_time/i, backward_update_time/i, i), file=timelogfile)
+                print("get_input: {} mv_to_gpu: {}, forward: {}, backwardU: {}, batch: {}".format(get_input_time/i, mv_gpu_time/i, forward_time/i, backward_update_time/i, i))
+                timelogfile.close()
                 # update statistics
                 batch_size = data['template_images'].shape[loader.stack_dim]
                 self._update_stats(stats, batch_size, loader)
@@ -132,6 +155,8 @@ class LTRTrainer(BaseTrainer):
                 if self.wandb_writer is not None and i % self.settings.print_interval == 0:
                     if self.settings.local_rank in [-1, 0]:
                         self.wandb_writer.write_log(self.stats, self.epoch)
+                
+                self.start_load_time = time.time()
         else:
             for i, data in enumerate(loader, 1):
                 

@@ -190,6 +190,8 @@ class TrackingSampler(torch.utils.data.Dataset):
                 if self.use_trackmix:
                     data_aug = self.processing_aug(data_aug)
                     data_aug_1 = self.processing_aug_1(data_aug_1)
+                    # data_aug = self.processing(data_aug)
+                    # data_aug_1 = self.processing(data_aug_1)
 
                 # check whether data is valid
                 valid = data['valid']

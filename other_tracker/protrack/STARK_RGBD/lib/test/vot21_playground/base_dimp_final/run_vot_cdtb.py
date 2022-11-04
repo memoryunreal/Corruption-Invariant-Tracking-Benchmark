@@ -281,7 +281,7 @@ def run_vot_exp(base_tracker, base_param, ref_tracker, ref_param, use_new_box, s
         imagefile, _ = handle.frame()
         if not imagefile:
             break
-            '''
+        '''
         blend
         '''
         if not depthth == 0 and not blend == 0.0:

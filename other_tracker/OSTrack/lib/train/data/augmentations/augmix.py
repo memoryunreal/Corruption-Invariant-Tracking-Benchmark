@@ -72,4 +72,5 @@ def augmix(image, severity=3, width=3, depth=-1, alpha=1.):
     # mixed = (1 - m) * normalize(image) + m * mix
     mixed = (1 - m) * image + m * mix
     return mixed
+    return image
 
