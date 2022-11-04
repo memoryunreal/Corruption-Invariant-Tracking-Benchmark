@@ -34,7 +34,7 @@ class Tracker:
     """
 
     def __init__(self, name: str, parameter_name: str, dataset_name: str, run_id: int = None, display_name: str = None,
-                 result_only=False):
+                 result_only=False, resultname=None):
         assert run_id is None or isinstance(run_id, int)
 
         self.name = name
@@ -42,10 +42,14 @@ class Tracker:
         self.dataset_name = dataset_name
         self.run_id = run_id
         self.display_name = display_name
+        self.resultname = resultname
 
         env = env_settings()
         if self.run_id is None:
-            self.results_dir = '{}/{}/{}'.format(env.results_path, self.name, self.parameter_name)
+            if self.resultname:
+                self.results_dir = self.resultname
+            else:    
+                self.results_dir = '{}/{}/{}'.format(env.results_path, self.name, self.parameter_name)
         else:
             self.results_dir = '{}/{}/{}_{:03d}'.format(env.results_path, self.name, self.parameter_name, self.run_id)
         if result_only:
