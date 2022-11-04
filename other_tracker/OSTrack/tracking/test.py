@@ -12,7 +12,7 @@ from lib.test.evaluation.tracker import Tracker
 
 
 def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', sequence=None, debug=0, threads=0,
-                num_gpus=8):
+                num_gpus=8, result_name=None, datasetpath=None):
     """Run tracker on sequence or dataset.
     args:
         tracker_name: Name of tracking method.
@@ -24,12 +24,12 @@ def run_tracker(tracker_name, tracker_param, run_id=None, dataset_name='otb', se
         threads: Number of threads.
     """
 
-    dataset = get_dataset(dataset_name)
+    dataset = get_dataset(dataset_name, datasetpath=datasetpath)
 
     if sequence is not None:
         dataset = [dataset[sequence]]
 
-    trackers = [Tracker(tracker_name, tracker_param, dataset_name, run_id)]
+    trackers = [Tracker(tracker_name, tracker_param, dataset_name, run_id, resultname=result_name)]
 
     run_dataset(dataset, trackers, debug, threads, num_gpus=num_gpus)
 
@@ -44,6 +44,8 @@ def main():
     parser.add_argument('--debug', type=int, default=0, help='Debug level.')
     parser.add_argument('--threads', type=int, default=0, help='Number of threads.')
     parser.add_argument('--num_gpus', type=int, default=8)
+    parser.add_argument('--datasetpath', type=str, default=None, help='set your datasetpath without local.py')
+    parser.add_argument('--result_name', type=str, default='', help='result_name.')
 
     args = parser.parse_args()
 
@@ -53,7 +55,7 @@ def main():
         seq_name = args.sequence
 
     run_tracker(args.tracker_name, args.tracker_param, args.runid, args.dataset_name, seq_name, args.debug,
-                args.threads, num_gpus=args.num_gpus)
+                args.threads, num_gpus=args.num_gpus, result_name = args.result_name, datasetpath=args.datasetpath)
 
 
 if __name__ == '__main__':

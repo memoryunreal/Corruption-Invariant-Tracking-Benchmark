@@ -1,4 +1,4 @@
-tracker=(stark50 stak101 stak101-got stark50-got stark50 stak101 stak101-got stark50-got)
+tracker=(stark50 stark101 stark101-got stark50-got stark50 stark101 stark101-got stark50-got)
 yaml=(baseline baseline_R101 baseline_R101_got10k_only baseline_got10k_only baseline baseline_R101 baseline_R101_got10k_only baseline_got10k_only)
 dataset_name=(got10k_val got10k_val got10k_val got10k_val got10k_val got10k_val got10k_val got10k_val)
 dataset=(GOT-10K GOT-10K GOT-10K GOT-10K GOT-10K-C GOT-10K-C GOT-10K-C GOT-10K-C)

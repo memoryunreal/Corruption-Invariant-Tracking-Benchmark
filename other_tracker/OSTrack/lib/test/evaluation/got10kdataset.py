@@ -15,7 +15,7 @@ class GOT10KDataset(BaseDataset):
 
     Download dataset from http://got-10k.aitestunion.com/downloads
     """
-    def __init__(self, split):
+    def __init__(self, split, datasetpath=None):
         super().__init__()
         # Split can be test, val, or ltrval (a validation split consisting of videos from the official train set)
         if split == 'test' or split == 'val':
@@ -23,6 +23,9 @@ class GOT10KDataset(BaseDataset):
         else:
             self.base_path = os.path.join(self.env_settings.got10k_path, 'train')
 
+        # rewrite datasetpath
+        if datasetpath:
+            self.base_path = datasetpath
         self.sequence_list = self._get_sequence_list(split)
         self.split = split
 
