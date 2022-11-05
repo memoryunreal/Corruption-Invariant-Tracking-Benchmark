@@ -233,7 +233,7 @@ def analysis_tracker(idx):
     su = tracker._prsu.success_50()
     ao = tracker._prsu.AO()
     # print('Trackers: {:<30} success50: {} \t AO: {}'. format(tracker.name, su, ao)) 
-    print('"Trackers: {:<30} success50: {:0.1f} \t AO: {:0.1f}",'. format(tracker.name, su*100, ao*100)) 
+    print('"Trackers: {:<30} success50: {:0.2f} \t AO: {:0.2f}",'. format(tracker.name, su*100, ao*100)) 
 ##success or pr-r
 # with open('/ssd3/lz/dataset/UAV123/UAV20L.txt', 'r') as f:
 

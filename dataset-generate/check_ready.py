@@ -47,14 +47,14 @@ def initialize():
     return originseq_color, newseq_color, seqlist
 
 def got10k():
-    newdata = "/home/dataset4/cvpr2023/GOT-10K-C/val/"
-    origindata_dir = "/home/dataset4/cvpr2023/GOT-10K/val/"
+    newdata = "/home/dataset4/cvpr2023/got10k_trackmix/aug1/train/"
+    origindata_dir = "/home/dataset/GOT-10K/train/"
 
     seqlist = os.listdir(origindata_dir)
     seqlist.remove('list.txt') # GOT-10K
 
     seqlist.sort()
-
+    seqlist = seqlist[:4000]
 
     originseq_color = [os.path.join(origindata_dir,seq) for seq in seqlist] 
 
