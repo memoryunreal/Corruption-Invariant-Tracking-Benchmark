@@ -4,6 +4,11 @@ import cv2 as cv
 import torch.nn.functional as F
 import numpy as np
 import random
+import os
+import sys
+prj_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../../")
+sys.path.append(os.path.join(prj_path, "lib/train/data/"))
+from trackmix import TrackMix
 '''modified from the original test implementation
 Replace cv.BORDER_REPLICATE with cv.BORDER_CONSTANT
 Add a variable called att_mask for computing attention and positional encoding later'''
@@ -32,7 +37,7 @@ def sample_target(im, target_bb, search_area_factor, output_sz=None, mask=None, 
             mix_x, mix_y, mix_w, mix_h = gt_mix
     # Crop image
     if gt_mix is not None:
-        track_mix = mixing_erasing()
+        track_mix = TrackMix()
         crop_sz = math.ceil(math.sqrt(w * h) * search_area_factor)
         crop_sz_mix = math.ceil(math.sqrt(mix_w * mix_h) * search_area_factor)
         if crop_sz < 1 or crop_sz_mix < 1:

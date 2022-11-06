@@ -2,7 +2,11 @@ import random
 import torch.utils.data
 from lib.utils import TensorDict
 import numpy as np
-
+import os
+import sys
+prj_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../../")
+sys.path.append(os.path.join(prj_path, "lib/train/data/"))
+from trackmix import TrackMix
 
 def no_processing(data):
     return data
@@ -110,7 +114,7 @@ class TrackingSampler(torch.utils.data.Dataset):
             is_video_dataset = dataset.is_video_sequence()
 
             # sample a sequence from the given dataset
-            seq_id, visible, seq_info_dict = self.sample_seq_from_dataset(dataset, is_video_dataset)
+            seq_id, visible, seq_info_dict, mix_seq_id, mix_visible, mix_seq_info_dict = self.sample_seq_from_dataset(dataset, is_video_dataset)
 
             if is_video_dataset:
                 template_frame_ids = None
@@ -137,6 +141,7 @@ class TrackingSampler(torch.utils.data.Dataset):
 
                 elif self.frame_sample_mode == "trident" or self.frame_sample_mode == "trident_pro":
                     template_frame_ids, search_frame_ids = self.get_frame_ids_trident(visible)
+                    mix_template_frame_ids, mix_search_frame_ids = self.get_frame_ids_trident(mix_visible)
                 elif self.frame_sample_mode == "stark":
                     template_frame_ids, search_frame_ids = self.get_frame_ids_stark(visible, seq_info_dict["valid"])
                 else:
@@ -147,6 +152,13 @@ class TrackingSampler(torch.utils.data.Dataset):
                 search_frame_ids = [1] * self.num_search_frames
             try:
                 template_frames, template_anno, meta_obj_train = dataset.get_frames(seq_id, template_frame_ids, seq_info_dict)
+                # template mix Global mix
+                mix_template_frames, mix_template_anno, mix_meta_obj_train = dataset.get_frames(mix_seq_id, mix_template_frame_ids, mix_seq_info_dict)
+                track_mix = TrackMix()
+                for id, tmf in enumerate(template_frames):
+                    template_frames[id] = track_mix.global_mix(tmf, mix_template_frames[id])
+
+                
                 search_frames, search_anno, meta_obj_test = dataset.get_frames(seq_id, search_frame_ids, seq_info_dict)
 
                 H, W, _ = template_frames[0].shape
@@ -155,6 +167,8 @@ class TrackingSampler(torch.utils.data.Dataset):
 
                 data = TensorDict({'template_images': template_frames,
                                    'template_anno': template_anno['bbox'],
+                                   'mix_template_images': mix_template_frames,
+                                   'mix_template_anno': mix_template_anno['bbox'],
                                    'template_masks': template_masks,
                                    'search_images': search_frames,
                                    'search_anno': search_anno['bbox'],
@@ -163,7 +177,9 @@ class TrackingSampler(torch.utils.data.Dataset):
                                    'test_class': meta_obj_test.get('object_class_name')})
                 # make data augmentation
                 data = self.processing(data)
-
+                # del mix images and annos
+                del data['mix_template_anno']
+                del data['mix_template_images']
                 # check whether data is valid
                 valid = data['valid']
             except:
@@ -190,11 +206,12 @@ class TrackingSampler(torch.utils.data.Dataset):
             is_video_dataset = dataset.is_video_sequence()
 
             # sample a sequence from the given dataset
-            seq_id, visible, seq_info_dict = self.sample_seq_from_dataset(dataset, is_video_dataset)
+            seq_id, visible, seq_info_dict, mix_seq_id = self.sample_seq_from_dataset(dataset, is_video_dataset)
             # sample template and search frame ids
             if is_video_dataset:
                 if self.frame_sample_mode in ["trident", "trident_pro"]:
-                    template_frame_ids, search_frame_ids = self.get_frame_ids_trident(visible)
+                    template_frame_ids, search_frame_ids= self.get_frame_ids_trident(visible)
+                    mix_template_frame_ids, mix_search_frame_ids= self.get_frame_ids_trident(visible)
                 elif self.frame_sample_mode == "stark":
                     template_frame_ids, search_frame_ids = self.get_frame_ids_stark(visible, seq_info_dict["valid"])
                 else:
@@ -207,6 +224,8 @@ class TrackingSampler(torch.utils.data.Dataset):
                 # "try" is used to handle trackingnet data failure
                 # get images and bounding boxes (for templates)
                 template_frames, template_anno, meta_obj_train = dataset.get_frames(seq_id, template_frame_ids,
+                                                                                    seq_info_dict)
+                mix_template_frames, mix_template_anno, mix_meta_obj_train = dataset.get_frames(mix_seq_id, mix_template_frame_ids,
                                                                                     seq_info_dict)
                 H, W, _ = template_frames[0].shape
                 template_masks = template_anno['mask'] if 'mask' in template_anno else [torch.zeros(
@@ -267,19 +286,29 @@ class TrackingSampler(torch.utils.data.Dataset):
 
         # Sample a sequence with enough visible frames
         enough_visible_frames = False
-        while not enough_visible_frames:
+        mix_enough_visible_frames = False
+        while not enough_visible_frames or not mix_enough_visible_frames:
             # Sample a sequence
             seq_id = random.randint(0, dataset.get_num_sequences() - 1)
+            mix_seq_id = random.randint(0, dataset.get_num_sequences() - 1)
 
             # Sample frames
             seq_info_dict = dataset.get_sequence_info(seq_id)
             visible = seq_info_dict['visible']
+            # mix images
+            mix_seq_info_dict = dataset.get_sequence_info(mix_seq_id)
+            mix_visible = mix_seq_info_dict['visible']
 
             enough_visible_frames = visible.type(torch.int64).sum().item() > 2 * (
                     self.num_search_frames + self.num_template_frames) and len(visible) >= 20
 
             enough_visible_frames = enough_visible_frames or not is_video_dataset
-        return seq_id, visible, seq_info_dict
+            # mix image
+            mix_enough_visible_frames = mix_visible.type(torch.int64).sum().item() > 2 * (
+            self.num_search_frames + self.num_template_frames) and len(mix_visible) >= 20
+
+            mix_enough_visible_frames = mix_enough_visible_frames or not is_video_dataset
+        return seq_id, visible, seq_info_dict, mix_seq_id, mix_visible, mix_seq_info_dict
 
     def get_one_search(self):
         # Select a dataset
@@ -313,10 +342,17 @@ class TrackingSampler(torch.utils.data.Dataset):
             search_frame_ids = self._sample_visible_ids(visible, num_ids=1)  # the search region id
             # get the dynamic template id
             for max_gap in self.max_gap:
-                if template_frame_id1[0] >= search_frame_ids[0]:
-                    min_id, max_id = search_frame_ids[0], search_frame_ids[0] + max_gap
-                else:
-                    min_id, max_id = search_frame_ids[0] - max_gap, search_frame_ids[0]
+                try:
+                    if template_frame_id1[0] >= search_frame_ids[0]:
+                        min_id, max_id = search_frame_ids[0], search_frame_ids[0] + max_gap
+                    else:
+                        min_id, max_id = search_frame_ids[0] - max_gap, search_frame_ids[0]
+                except:
+                    template_frame_id1 = self._sample_visible_ids(visible, num_ids=1)  # the initial template id
+                    if template_frame_id1[0] >= search_frame_ids[0]:
+                        min_id, max_id = search_frame_ids[0], search_frame_ids[0] + max_gap
+                    else:
+                        min_id, max_id = search_frame_ids[0] - max_gap, search_frame_ids[0]
                 if self.frame_sample_mode == "trident_pro":
                     f_id = self._sample_visible_ids(visible, num_ids=1, min_id=min_id, max_id=max_id,
                                                     allow_invisible=True)

@@ -118,6 +118,7 @@ class STARKProcessing(BaseProcessing):
             crops, boxes, att_mask, mask_crops = prutils.jittered_center_crop(data[s + '_images'], jittered_anno,
                                                                               data[s + '_anno'], self.search_area_factor[s],
                                                                               self.output_sz[s], masks=data[s + '_masks'])
+
             # Apply transforms
             data[s + '_images'], data[s + '_anno'], data[s + '_att'], data[s + '_masks'] = self.transform[s](
                 image=crops, bbox=boxes, att=att_mask, mask=mask_crops, joint=False)
