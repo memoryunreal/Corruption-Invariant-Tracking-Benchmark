@@ -47,7 +47,7 @@ def initialize():
     return originseq_color, newseq_color, seqlist
 
 def got10k():
-    newdata = "/home/dataset4/cvpr2023/got10k_trackmix/aug1/train/"
+    newdata = "/home/dataset4/cvpr2023/got10k_trackmix/aug2/train/"
     origindata_dir = "/home/dataset/GOT-10K/train/"
 
     seqlist = os.listdir(origindata_dir)

@@ -24,6 +24,7 @@ seqlist = os.listdir(origindata_dir)
 seqlist.remove('list.txt')
 
 seqlist.sort()
+seqlist = ["GOT-10k_Train_003961"]
 originseq_color = [os.path.join(origindata_dir,seq) for seq in seqlist] 
 
 aug1_color = [os.path.join(augdata1, seq) for seq in seqlist]
@@ -89,8 +90,8 @@ def generate_augment(i):
 
 completefile = open("/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/dataset-generate/got-10k_train/complete.log", 'a')
 # pool = Pool(processes=multiprocessing.cpu_count())    # set the processes max number 3
-# pool = Pool(processes=20)    # set the processes max number 3
-pool = Pool(processes=multiprocessing.cpu_count())   # set the processes max number 3
+pool = Pool(processes=1)    # set the processes max number 3
+# pool = Pool(processes=multiprocessing.cpu_count())   # set the processes max number 3
 for i in range(len(seqlist)):
     result = pool.apply_async(generate_augment, (i,))
 pool.close()
