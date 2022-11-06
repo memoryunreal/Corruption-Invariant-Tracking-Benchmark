@@ -15,7 +15,17 @@ class STARK_ST(BaseTracker):
     def __init__(self, params, dataset_name):
         super(STARK_ST, self).__init__(params)
         network = build_starkst(params.cfg)
+        # network1 =torch.load(self.params.checkpoint, map_location='cpu') 
         network.load_state_dict(torch.load(self.params.checkpoint, map_location='cpu')['net'], strict=True)
+        # network2 = torch.load(self.params.checkpoint1, map_location='cpu')['net']
+        # network.load_state_dict(torch.load(self.params.checkpoint1, map_location='cpu')['net'], strict=False)
+
+        # state = {
+            
+            # 'net': network.state_dict()
+            
+        # }
+        # torch.save(network.state_dict(), '/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Stark/checkpoints/train/stark_s/baseline_got10k_only/lz.pth.tar')
         self.cfg = params.cfg
         self.network = network.cuda()
         self.network.eval()

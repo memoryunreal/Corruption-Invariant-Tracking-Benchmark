@@ -21,9 +21,10 @@ def parameters(yaml_name: str):
     params.search_size = cfg.TEST.SEARCH_SIZE
 
     # Network checkpoint path
-    params.checkpoint = os.path.join(save_dir, "checkpoints/train/stark_st2/%s/STARKST_ep%04d.pth.tar" %
-                                     (yaml_name, cfg.TEST.EPOCH))
-
+    # params.checkpoint = os.path.join(save_dir, "checkpoints/train/stark_st2/%s/STARKST_ep%04d.pth.tar" %
+                                    #  (yaml_name, cfg.TEST.EPOCH))
+    params.checkpoint = os.path.join("/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Stark/checkpoints/train/stark_s/baseline_got10k_only/lz.pth.tar")
+    params.checkpoint1 = os.path.join(save_dir, "checkpoints/train/stark_s/baseline_got10k_only/STARKS_ep0500.pth.tar")
     # whether to save boxes from all queries
     params.save_all_boxes = False
 
