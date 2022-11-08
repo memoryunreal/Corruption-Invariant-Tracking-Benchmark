@@ -39,8 +39,14 @@ class Transform:
         self._valid_inputs = ['image', 'coords', 'bbox', 'mask', 'att']
         self._valid_args = ['joint', 'new_roll']
         self._valid_all = self._valid_inputs + self._valid_args
+        self.supImage = None 
 
     def __call__(self, **inputs):
+        if len(inputs['image']) == 3:
+            self.supImage = inputs['image'][2]
+            out_a = {}
+            out_a['image'] = self.supImage
+            self.supImage = self.transforms[0](**out_a)['image']
         var_names = [k for k in inputs.keys() if k in self._valid_inputs]
         for v in inputs.keys():
             if v not in self._valid_all:
@@ -56,7 +62,12 @@ class Transform:
         out = {k: v for k, v in inputs.items() if k in self._valid_inputs}
 
         for t in self.transforms:
-            out = t(**out, joint=joint_mode, new_roll=new_roll)
+            if str(type(t)) == "<class 'lib.train.data.transforms.TrackMix'>":
+                a = out
+                a['supimage'] = self.supImage
+                out = t(**a, joint=joint_mode, new_roll=new_roll)
+            else:
+                out = t(**out, joint=joint_mode, new_roll=new_roll)
         if len(var_names) == 1:
             return out[var_names[0]]
         # Make sure order is correct
@@ -91,9 +102,13 @@ class TransformBase:
         self._valid_args = ['new_roll']
         self._valid_all = self._valid_inputs + self._valid_args
         self._rand_params = None
+        self.supImage = None
 
     def __call__(self, **inputs):
         # Split input
+        if 'supimage' in inputs.keys():
+            self.supImage = inputs['supimage']
+            inputs.pop('supimage')
         input_vars = {k: v for k, v in inputs.items() if k in self._valid_inputs}
         input_args = {k: v for k, v in inputs.items() if k in self._valid_args}
 
@@ -140,6 +155,10 @@ class TransformBase:
         return None
 
     def transform_image(self, image, *rand_params):
+        """Must be deterministic"""
+        return image
+    
+    def transform_supimage(self, image, *rand_params):
         """Must be deterministic"""
         return image
 
@@ -335,23 +354,9 @@ class RandomHorizontalFlip_Norm(RandomHorizontalFlip):
         return coords
 
 
-def _get_pixels(per_pixel,
-                rand_color,
-                patch_size,
-                dtype=torch.float32,
-                device='cuda'):
-    # NOTE I've seen CUDA illegal memory access errors being caused by the normal_()
-    # paths, flip the order so normal is run on CPU if this becomes a problem
-    # Issue has been fixed in master https://github.com/pytorch/pytorch/issues/19508
-    if per_pixel:
-        return torch.empty(patch_size, dtype=dtype, device=device).normal_()
-    elif rand_color:
-        return torch.empty((patch_size[0], 1, 1), dtype=dtype,
-                           device=device).normal_()
-    else:
-        return torch.zeros((patch_size[0], 1, 1), dtype=dtype, device=device)
 
-class mixing_erasing(TransformBase):
+
+class TrackMix(TransformBase):
     """ Randomly selects a rectangle region in an image and erases its pixels with different mixing operation.
     normal: original random erasing;
     soft: mixing ori with random pixel;
@@ -371,7 +376,7 @@ class mixing_erasing(TransformBase):
                  mean=(0.4914, 0.4822, 0.4465),
                  mode='pixel',
                  device='cpu',
-                 type='normal',
+                 type='self',
                  mixing_coeff=[1.0, 1.0]):
         super().__init__()
         self.probability = probability
@@ -392,11 +397,13 @@ class mixing_erasing(TransformBase):
         self.type = type
         self.mixing_coeff = mixing_coeff
 
+    # local mix
     def transform_image(self, img):
-
         if random.uniform(0, 1) >= self.probability:
             return img
-
+        # sup_img = self.supImage.numpy()
+        # ori_img = img.numpy()
+        # cv.imwrite('/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/ori_img.png', np.transpose(ori_img, (1,2,0))*255)
         for attempt in range(100):
             area = img.size()[1] * img.size()[2]
 
@@ -415,32 +422,15 @@ class mixing_erasing(TransformBase):
                     m = np.float32(
                         np.random.beta(self.mixing_coeff[0],
                                        self.mixing_coeff[1]))
+                # m = 1.0
                 if self.type == 'self':
                     x2 = random.randint(0, img.size()[1] - h)
                     y2 = random.randint(0, img.size()[2] - w)
                     img[:, x1:x1 + h,
                         y1:y1 + w] = (1 - m) * img[:, x1:x1 + h, y1:y1 +
-                                                   w] + m * img[:, x2:x2 + h,
+                                                   w] + m * self.supImage[:, x2:x2 + h,
                                                                 y2:y2 + w]
-                else:
-                    if self.mode == 'const':
-                        img[0, x1:x1 + h,
-                            y1:y1 + w] = (1 - m) * img[0, x1:x1 + h, y1:y1 +
-                                                       w] + m * self.mean[0]
-                        img[1, x1:x1 + h,
-                            y1:y1 + w] = (1 - m) * img[1, x1:x1 + h, y1:y1 +
-                                                       w] + m * self.mean[1]
-                        img[2, x1:x1 + h,
-                            y1:y1 + w] = (1 - m) * img[2, x1:x1 + h, y1:y1 +
-                                                       w] + m * self.mean[2]
-                    else:
-                        img[:, x1:x1 + h, y1:y1 +
-                            w] = (1 - m) * img[:, x1:x1 + h,
-                                               y1:y1 + w] + m * _get_pixels(
-                                                   self.per_pixel,
-                                                   self.rand_color,
-                                                   (img.size()[0], h, w),
-                                                   dtype=img.dtype,
-                                                   device=self.device)
+                # cv.imwrite('/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/sup_img.png', np.transpose(sup_img, (1,2,0))*255)
+                # cv.imwrite('/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/mix_img.png', np.transpose(img.numpy(), (1,2,0))*255)
                 return img
         return img

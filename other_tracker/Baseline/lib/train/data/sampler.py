@@ -50,7 +50,7 @@ class TrackingSampler(torch.utils.data.Dataset):
         self.samples_per_epoch = samples_per_epoch
         self.max_gap = max_gap
         self.num_search_frames = num_search_frames
-        self.num_template_frames = num_template_frames
+        self.num_template_frames = num_template_frames + 1
         self.processing = processing
         self.frame_sample_mode = frame_sample_mode
 

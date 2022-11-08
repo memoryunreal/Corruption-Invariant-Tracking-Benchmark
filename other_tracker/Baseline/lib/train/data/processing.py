@@ -121,7 +121,11 @@ class STARKProcessing(BaseProcessing):
             # Apply transforms
             data[s + '_images'], data[s + '_anno'], data[s + '_att'], data[s + '_masks'] = self.transform[s](
                 image=crops, bbox=boxes, att=att_mask, mask=mask_crops, joint=False)
-
+            if len(data["template_images"]) == 3:
+                data["template_images"] = data["template_images"][:2]
+                data["template_anno"] = data["template_anno"][:2]
+                data["template_att"] = data["template_att"][:2]
+                data["template_masks"] = data["template_masks"][:2]
             # 2021.1.9 Check whether elements in data[s + '_att'] is all 1
             # Note that type of data[s + '_att'] is tuple, type of ele is torch.tensor
             for ele in data[s + '_att']:

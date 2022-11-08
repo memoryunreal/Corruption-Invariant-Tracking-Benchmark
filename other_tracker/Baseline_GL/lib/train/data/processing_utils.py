@@ -288,8 +288,8 @@ class mixing_erasing(object):
         # mix_img = torch.tensor(mix_img)
         # img = img.reshape(img.size()[2], img.size()[0], img.size()[1])
         # mix_img = mix_img.reshape(mix_img.size()[2], mix_img.size()[0], mix_img.size()[1])
-        cv.imwrite("/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/ori_img.png", img)
-        cv.imwrite("/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/ori_mix.png", mix_img)
+        # cv.imwrite("/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/ori_img.png", img)
+        # cv.imwrite("/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/ori_mix.png", mix_img)
         img = img.reshape(img.shape[2], img.shape[0], img.shape[1])
         mix_img = mix_img.reshape(mix_img.shape[2], mix_img.shape[0], mix_img.shape[1])
         for attempt in range(100):
@@ -344,7 +344,7 @@ class mixing_erasing(object):
                                                    dtype=img.dtype,
                                                    device=self.device)
                 img = img.reshape(img.shape[1], img.shape[2], img.shape[0])
-                cv.imwrite("/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/mix_img.png", img)
+                # cv.imwrite("/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Baseline/debug/mix_img.png", img)
                 return img 
         img = img.reshape(img.shape[1], img.shape[2], img.shape[0])
         return img

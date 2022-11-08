@@ -6,6 +6,7 @@ def local_env_settings():
     # Set your local paths here.
 
     settings.davis_dir = ''
+    settings.avist_path = '/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Stark/data/avist'
     settings.got10k_lmdb_path = '/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Stark/data/got10k_lmdb'
     settings.got10k_path = '/home/CVPR2023/Corruption-Invariant-Tracking-Benchmark/other_tracker/Stark/data/got10k'
     settings.got_packed_results_path = ''

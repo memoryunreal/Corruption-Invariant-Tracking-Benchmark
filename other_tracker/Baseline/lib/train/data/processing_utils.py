@@ -24,68 +24,44 @@ def sample_target(im, target_bb, search_area_factor, output_sz=None, mask=None, 
     """
     if not isinstance(target_bb, list):
         x, y, w, h = target_bb.tolist()
-        if gt_mix is not None:
-            mix_x, mix_y, mix_w, mix_h = gt_mix.tolist()
+        # if gt_mix is not None:
+        #     mix_x, mix_y, mix_w, mix_h = gt_mix.tolist()
     else:
         x, y, w, h = target_bb
-        if gt_mix is not None:
-            mix_x, mix_y, mix_w, mix_h = gt_mix
+        # if gt_mix is not None:
+        #     mix_x, mix_y, mix_w, mix_h = gt_mix
     # Crop image
-    if gt_mix is not None:
-        track_mix = mixing_erasing()
-        crop_sz = math.ceil(math.sqrt(w * h) * search_area_factor)
-        crop_sz_mix = math.ceil(math.sqrt(mix_w * mix_h) * search_area_factor)
-        if crop_sz < 1 or crop_sz_mix < 1:
-            raise Exception('Too small bounding box.')
+    # if gt_mix is not None:
+    #     track_mix = mixing_erasing()
+    #     crop_sz = math.ceil(math.sqrt(w * h) * search_area_factor)
+    #     crop_sz_mix = math.ceil(math.sqrt(mix_w * mix_h) * search_area_factor)
+    #     if crop_sz < 1 or crop_sz_mix < 1:
+    #         raise Exception('Too small bounding box.')
 
-        x1 = round(x + 0.5 * w - crop_sz * 0.5)
-        x2 = x1 + crop_sz
+    #     x1 = round(x + 0.5 * w - crop_sz * 0.5)
+    #     x2 = x1 + crop_sz
 
-        y1 = round(y + 0.5 * h - crop_sz * 0.5)
-        y2 = y1 + crop_sz
+    #     y1 = round(y + 0.5 * h - crop_sz * 0.5)
 
-        x1_pad = max(0, -x1)
-        x2_pad = max(x2 - im.shape[1] + 1, 0)
+   
+    crop_sz = math.ceil(math.sqrt(w * h) * search_area_factor)
 
-        y1_pad = max(0, -y1)
-        y2_pad = max(y2 - im.shape[0] + 1, 0)
+    if crop_sz < 1:
+        raise Exception('Too small bounding box.')
 
-        # crop mix image
-        mix_x1 = round(mix_x + 0.5 * mix_w - crop_sz_mix * 0.5)
-        mix_x2 = mix_x1 + crop_sz_mix
+    x1 = round(x + 0.5 * w - crop_sz * 0.5)
+    x2 = x1 + crop_sz
 
-        mix_y1 = round(mix_y + 0.5 * mix_h - crop_sz_mix * 0.5)
-        mix_y2 = mix_y1 + crop_sz_mix
+    y1 = round(y + 0.5 * h - crop_sz * 0.5)
+    y2 = y1 + crop_sz
 
-        mix_x1_pad = max(0, -mix_x1)
-        mix_x2_pad = max(mix_x2 - im_mix.shape[1] + 1, 0)
+    x1_pad = max(0, -x1)
+    x2_pad = max(x2 - im.shape[1] + 1, 0)
 
-        mix_y1_pad = max(0, -mix_y1)
-        mix_y2_pad = max(mix_y2 - im_mix.shape[0] + 1, 0)
-        # Crop target
-        im_crop = im[y1 + y1_pad:y2 - y2_pad, x1 + x1_pad:x2 - x2_pad, :]
-        im_crop_mix = im_mix[mix_y1 + mix_y1_pad:mix_y2 - mix_y2_pad, mix_x1 + mix_x1_pad:x2 - mix_x2_pad, :]
-        # track mix crop
-        im_crop = track_mix.transform_image(im_crop, mix_img=im_crop_mix)
-    else:
-        crop_sz = math.ceil(math.sqrt(w * h) * search_area_factor)
-
-        if crop_sz < 1:
-            raise Exception('Too small bounding box.')
-
-        x1 = round(x + 0.5 * w - crop_sz * 0.5)
-        x2 = x1 + crop_sz
-
-        y1 = round(y + 0.5 * h - crop_sz * 0.5)
-        y2 = y1 + crop_sz
-
-        x1_pad = max(0, -x1)
-        x2_pad = max(x2 - im.shape[1] + 1, 0)
-
-        y1_pad = max(0, -y1)
-        y2_pad = max(y2 - im.shape[0] + 1, 0)
-        # Crop target
-        im_crop = im[y1 + y1_pad:y2 - y2_pad, x1 + x1_pad:x2 - x2_pad, :]
+    y1_pad = max(0, -y1)
+    y2_pad = max(y2 - im.shape[0] + 1, 0)
+    # Crop target
+    im_crop = im[y1 + y1_pad:y2 - y2_pad, x1 + x1_pad:x2 - x2_pad, :]
 
     if mask is not None:
         mask_crop = mask[y1 + y1_pad:y2 - y2_pad, x1 + x1_pad:x2 - x2_pad]
@@ -171,16 +147,17 @@ def jittered_center_crop(frames, box_extract, box_gt, search_area_factor, output
         masks_crop = None
     else:
         # have extra mix image
-        if len(frames) == 3:
-            im_mix = frames[2]
-            gt_mix = box_extract[2]
-            frames = frames[:2]
-            box_extract = box_extract[:2]
-            crops_resize_factors = [sample_target(f, a, search_area_factor, output_sz, m, im_mix=im_mix, gt_mix=gt_mix)
+        # if len(frames) == 3:
+        #     im_mix = frames[2]
+        #     gt_mix = box_extract[2]
+        #     frames = frames[:2]
+        #     box_extract = box_extract[:2]
+            # crops_resize_factors = [sample_target(f, a, search_area_factor, output_sz, m, im_mix=im_mix, gt_mix=gt_mix)
+                                    # for f, a, m in zip(frames, box_extract, masks)]
+        # else:
+        crops_resize_factors = [sample_target(f, a, search_area_factor, output_sz, m)
                                     for f, a, m in zip(frames, box_extract, masks)]
-        else:
-            crops_resize_factors = [sample_target(f, a, search_area_factor, output_sz, m)
-                                    for f, a, m in zip(frames, box_extract, masks)]
+
         frames_crop, resize_factors, att_mask, masks_crop = zip(*crops_resize_factors)
     # frames_crop: tuple of ndarray (128,128,3), att_mask: tuple of ndarray (128,128)
     crop_sz = torch.Tensor([output_sz, output_sz])

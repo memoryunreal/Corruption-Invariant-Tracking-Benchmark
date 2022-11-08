@@ -81,7 +81,10 @@ def build_dataloaders(cfg, settings):
                                     tfm.RandomHorizontalFlip(probability=0.5))
 
     transform_train = tfm.Transform(tfm.ToTensorAndJitter(0.2),
-                                    tfm.mixing_erasing(),
+                                    tfm.RandomHorizontalFlip_Norm(probability=0.5),
+                                    tfm.Normalize(mean=cfg.DATA.MEAN, std=cfg.DATA.STD))
+    transform_template = tfm.Transform(tfm.ToTensorAndJitter(0.2),
+                                    tfm.TrackMix(),
                                     tfm.RandomHorizontalFlip_Norm(probability=0.5),
                                     tfm.Normalize(mean=cfg.DATA.MEAN, std=cfg.DATA.STD))
 
@@ -98,6 +101,7 @@ def build_dataloaders(cfg, settings):
                                                        scale_jitter_factor=settings.scale_jitter_factor,
                                                        mode='sequence',
                                                        transform=transform_train,
+                                                       template_transform=transform_template, 
                                                        joint_transform=transform_joint,
                                                        settings=settings)
 
